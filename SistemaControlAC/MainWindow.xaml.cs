@@ -11,9 +11,9 @@ namespace SistemaControlAC
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IAuthenticationService _authService;
-        private readonly ISessionService _sessionService;
-        private DispatcherTimer _activityTimer;
+        private readonly IAuthenticationService? _authService;
+        private readonly ISessionService? _sessionService; // Allow nullability to avoid CS8601
+        private readonly DispatcherTimer _activityTimer; // Marked as readonly and initialized in the constructor
 
         public MainWindow()
         {
@@ -21,6 +21,10 @@ namespace SistemaControlAC
             var app = (App)Application.Current;
             _authService = app.Services.GetService(typeof(IAuthenticationService)) as IAuthenticationService;
             _sessionService = app.Services.GetService(typeof(ISessionService)) as ISessionService;
+
+            // Initialize the _activityTimer to avoid CS8618
+            _activityTimer = new DispatcherTimer();
+
             InitializeUserInterface();
             SetupActivityMonitoring();
         }
@@ -58,10 +62,7 @@ namespace SistemaControlAC
             }
 
             // Timer para actualizar la actividad del usuario
-            _activityTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMinutes(1)
-            };
+            _activityTimer.Interval = TimeSpan.FromMinutes(1);
             _activityTimer.Tick += (s, e) =>
             {
                 _sessionService?.UpdateActivity();

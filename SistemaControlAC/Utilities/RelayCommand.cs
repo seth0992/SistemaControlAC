@@ -9,45 +9,45 @@ namespace SistemaControlAC.Utilities
 {
     public class RelayCommand : ICommand
     {
-        private readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
+        private readonly Action<object?> _execute; // Allow nullable object
+        private readonly Func<object?, bool>? _canExecute; // Allow nullable Func
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged // Allow nullable EventHandler
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null) // Adjusted parameter types
         {
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute)); // Ensure non-null
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+        public bool CanExecute(object? parameter) => _canExecute == null || _canExecute(parameter);
 
-        public void Execute(object parameter) => _execute(parameter);
+        public void Execute(object? parameter) => _execute(parameter);
     }
 
     // Versión genérica para mayor comodidad
     public class RelayCommand<T> : ICommand
     {
         private readonly Action<T> _execute;
-        private readonly Func<T, bool> _canExecute;
+        private readonly Func<T, bool>? _canExecute;
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged // Allow nullable EventHandler
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<T> execute, Func<T, bool> canExecute = null)
+        public RelayCommand(Action<T> execute, Func<T, bool>? canExecute = null) // Adjusted parameter types
         {
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute)); // Ensure non-null
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_canExecute == null)
                 return true;
@@ -58,7 +58,7 @@ namespace SistemaControlAC.Utilities
             return false;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             if (parameter is T typedParameter)
                 _execute(typedParameter);

@@ -27,7 +27,7 @@ namespace SistemaControlAC.View
             // Suscribirse a cambios de propiedades si no funcionan los convertidores
             if (DataContext is LoginViewModel viewModel)
             {
-                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+                viewModel.PropertyChanged += ViewModel_PropertyChanged!;
             }
         }
 
@@ -45,7 +45,7 @@ namespace SistemaControlAC.View
         }
 
         // Manejar cambios de propiedades manualmente si los convertidores no funcionan
-        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (DataContext is LoginViewModel viewModel)
             {
@@ -84,7 +84,7 @@ namespace SistemaControlAC.View
         {
             if (DataContext is LoginViewModel viewModel)
             {
-                viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+                viewModel.PropertyChanged -= ViewModel_PropertyChanged!;
             }
             base.OnClosed(e);
         }

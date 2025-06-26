@@ -17,8 +17,8 @@ namespace SistemaControlAC
     /// </summary>
     public partial class App : Application
     {
-        internal ServiceProvider _serviceProvider;
-        private IConfiguration _configuration;
+        internal ServiceProvider _serviceProvider = null!; 
+        private IConfiguration _configuration = null!;
 
         public IServiceProvider Services => _serviceProvider;
 
