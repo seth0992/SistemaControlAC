@@ -10,7 +10,7 @@ namespace SistemaControlAC.Utilities
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        // Fix for CS8625: Provide a default empty string value for the parameter to avoid null assignment.
+       
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propName = "")
