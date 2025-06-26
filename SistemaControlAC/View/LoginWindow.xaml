@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SistemaControlAC.View"
         mc:Ignorable="d"
           Title="{Binding Title}" 
-        Height="500" 
+        Height="550" 
         Width="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -143,20 +143,21 @@
                           Foreground="#666"
                           Margin="0,0,0,20"/>
 
-                <!-- Mensaje de error -->
+                <!-- Mensaje de error (sin convertidor) -->
                 <TextBlock Grid.Row="6"
+                           Name="ErrorMessageTextBlock"
                            Text="{Binding ErrorMessage}"
                            Foreground="#F44336"
                            FontSize="12"
                            TextWrapping="Wrap"
                            Margin="0,0,0,10"
-                           Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+                           Visibility="Collapsed"/>
 
                 <!-- Botón Login -->
                 <Button Grid.Row="7"
+                        Name="LoginButton"
                         Content="Iniciar Sesión"
                         Command="{Binding LoginCommand}"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                         Height="45"
                         Background="#2196F3"
                         Foreground="White"
@@ -189,12 +190,13 @@
                     </Button.Style>
                 </Button>
 
-                <!-- Indicador de carga -->
+                <!-- Indicador de carga (sin convertidor) -->
                 <ProgressBar Grid.Row="7"
+                             Name="LoadingProgressBar"
                              IsIndeterminate="True"
                              Height="3"
                              VerticalAlignment="Bottom"
-                             Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+                             Visibility="Collapsed"
                              Foreground="#2196F3"/>
             </Grid>
         </Grid>
