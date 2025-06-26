@@ -5,8 +5,193 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SistemaControlAC"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+         Title="Sistema Control AC - Panel Principal" 
+        Height="720" 
+        Width="1280" WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
 
+    <Window.Resources>
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E3F2FD"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#BBDEFB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Barra superior -->
+        <Border Grid.Row="0" 
+                Background="#2196F3"
+                Height="60">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Logo y título -->
+                <StackPanel Grid.Column="0" 
+                            Orientation="Horizontal"
+                            Margin="20,0">
+                    <TextBlock Text="AC"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"/>
+                    <TextBlock Text="Sistema Control AC"
+                               FontSize="20"
+                               Foreground="White"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Información del usuario -->
+                <StackPanel Grid.Column="2" 
+                            Orientation="Horizontal"
+                            Margin="20,0"
+                            VerticalAlignment="Center">
+                    <TextBlock x:Name="UserNameText"
+                               Foreground="White"
+                               FontSize="14"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"/>
+                    <TextBlock x:Name="UserRoleText"
+                               Foreground="#B3E5FC"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Margin="0,0,20,0"/>
+                    <Button Content="Cerrar Sesión"
+                            Click="LogoutButton_Click"
+                            Background="#1976D2"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Padding="15,8"
+                            Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="5"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Contenido principal -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Menú lateral -->
+            <Border Grid.Column="0"
+                    Background="#F5F5F5"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="0,0,1,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,20">
+                        <TextBlock Text="MENÚ PRINCIPAL"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="#666"
+                                   Margin="20,0,0,15"/>
+
+                        <!-- Elementos del menú -->
+                        <Button Content="🏠 Inicio"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                        <Button Content="👥 Clientes"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                        <Button Content="❄️ Equipos"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                        <Button Content="📅 Citas"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                        <Button Content="🔧 Órdenes de Trabajo"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                        <Button Content="📊 Reportes"
+                                Style="{StaticResource MenuButtonStyle}"/>
+
+                        <Separator Margin="20,20"/>
+
+                        <TextBlock Text="ADMINISTRACIÓN"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="#666"
+                                   Margin="20,0,0,15"
+                                   x:Name="AdminSectionTitle"/>
+
+                        <Button Content="👤 Usuarios"
+                                x:Name="UsersMenuButton"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                        <Button Content="⚙️ Configuración"
+                                x:Name="ConfigMenuButton"
+                                Style="{StaticResource MenuButtonStyle}"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Área de contenido -->
+            <Border Grid.Column="1"
+                    Background="White">
+                <ContentControl x:Name="ContentArea"
+                                Margin="20"/>
+            </Border>
+        </Grid>
+
+        <!-- Barra de estado -->
+        <Border Grid.Row="2"
+                Background="#F5F5F5"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,1,0,0"
+                Height="30">
+            <Grid>
+                <TextBlock Text="Sistema Control AC v1.0"
+                           Foreground="#666"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Margin="10,0"/>
+                <TextBlock x:Name="StatusText"
+                           HorizontalAlignment="Right"
+                           Foreground="#666"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Margin="10,0"/>
+            </Grid>
+        </Border>
     </Grid>
+
+    
 </Window>
