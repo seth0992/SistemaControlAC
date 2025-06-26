@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -228,6 +229,160 @@ namespace SistemaControlAC.Helpers
                 return count == 1 ? $"1 {word}" : $"{count} {word}s";
             }
             return "0 elementos";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class BooleanToIconConverter : IValueConverter
+    {
+        public static BooleanToIconConverter Instance { get; } = new BooleanToIconConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool boolValue)
+            {
+                return boolValue ? PackIconKind.CheckCircle : PackIconKind.Cancel;
+            }
+            return PackIconKind.Help;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class CountToVisibilityConverter : IValueConverter
+    {
+        public static CountToVisibilityConverter Instance { get; } = new CountToVisibilityConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is int count)
+            {
+                return count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class StringToFontStyleConverter : IValueConverter
+    {
+        public static StringToFontStyleConverter Instance { get; } = new StringToFontStyleConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string text && string.IsNullOrWhiteSpace(text))
+            {
+                return FontStyles.Italic;
+            }
+            return FontStyles.Normal;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    // Convertidores para formularios
+    public class EditModeToIconConverter : IValueConverter
+    {
+        public static EditModeToIconConverter Instance { get; } = new EditModeToIconConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool isEditMode)
+            {
+                return isEditMode ? PackIconKind.AccountEdit : PackIconKind.AccountPlus;
+            }
+            return PackIconKind.Account;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class EditModeToSubtitleConverter : IValueConverter
+    {
+        public static EditModeToSubtitleConverter Instance { get; } = new EditModeToSubtitleConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool isEditMode)
+            {
+                return isEditMode ? "Modificar información del cliente" : "Agregar nuevo cliente al sistema";
+            }
+            return "Formulario de cliente";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class EditModeToSaveButtonConverter : IValueConverter
+    {
+        public static EditModeToSaveButtonConverter Instance { get; } = new EditModeToSaveButtonConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool isEditMode)
+            {
+                return isEditMode ? "ACTUALIZAR" : "GUARDAR";
+            }
+            return "GUARDAR";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class EditModeToSaveIconConverter : IValueConverter
+    {
+        public static EditModeToSaveIconConverter Instance { get; } = new EditModeToSaveIconConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool isEditMode)
+            {
+                return isEditMode ? PackIconKind.Update : PackIconKind.ContentSave;
+            }
+            return PackIconKind.ContentSave;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class EditModeToSavingTextConverter : IValueConverter
+    {
+        public static EditModeToSavingTextConverter Instance { get; } = new EditModeToSavingTextConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool isEditMode)
+            {
+                return isEditMode ? "Actualizando cliente..." : "Guardando cliente...";
+            }
+            return "Procesando...";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

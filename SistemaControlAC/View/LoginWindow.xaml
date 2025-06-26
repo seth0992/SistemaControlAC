@@ -3,202 +3,217 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:SistemaControlAC.View"
         mc:Ignorable="d"
-          Title="{Binding Title}" 
-        Height="550" 
-        Width="400"
+        Title="{Binding Title}" 
+        Height="650" 
+        Width="500"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="Transparent">
-    <Border Background="White" 
-            CornerRadius="15"
-            BorderThickness="1"
-            BorderBrush="#E0E0E0">
+        Background="Transparent"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <Window.Resources>
+        <Storyboard x:Key="FadeInStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                           From="0" To="1" Duration="0:0:0.8"/>
+            <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                              From="0,50,0,0" To="0,0,0,0" Duration="0:0:0.8"/>
+        </Storyboard>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard Storyboard="{StaticResource FadeInStoryboard}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp8" 
+                         Margin="20">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="200"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Título y botón cerrar -->
+            <!-- Header con gradiente y logo -->
             <Border Grid.Row="0" 
-                    Background="#2196F3"
-                    CornerRadius="15,15,0,0"
-                    MouseLeftButtonDown="Border_MouseLeftButtonDown">
-                <Grid Height="40">
-                    <TextBlock Text="Sistema Control AC"
-                               Foreground="White"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"/>
+                    CornerRadius="4,4,0,0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+                        <GradientStop Color="{StaticResource Primary700}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
 
-                    <Button Content="✕"
+                <Grid>
+                    <!-- Botón cerrar -->
+                    <Button HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="16"
                             Command="{Binding CancelCommand}"
-                            HorizontalAlignment="Right"
-                            Background="Transparent"
-                            BorderThickness="0"
+                            Style="{StaticResource MaterialDesignToolButton}"
                             Foreground="White"
-                            FontSize="16"
-                            Padding="15,0"
-                            Cursor="Hand" Margin="0,9,18,-9">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <TextBlock Text="{TemplateBinding Content}"
-                                           Foreground="{TemplateBinding Foreground}"/>
-                            </ControlTemplate>
-                        </Button.Template>
+                            Width="32" Height="32">
+                        <materialDesign:PackIcon Kind="Close" Width="20" Height="20"/>
                     </Button>
+
+                    <!-- Logo y título centrados -->
+                    <StackPanel VerticalAlignment="Center" 
+                                HorizontalAlignment="Center">
+                        <Ellipse Width="80" Height="80" 
+                                 Fill="White" 
+                                 Margin="0,0,0,16">
+                            <Ellipse.Effect>
+                                <DropShadowEffect Color="Black" 
+                                                  Opacity="0.3" 
+                                                  ShadowDepth="2" 
+                                                  BlurRadius="8"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+
+                        <StackPanel Orientation="Horizontal" 
+                                    HorizontalAlignment="Center"
+                                    Margin="0,-60,0,0">
+                            <materialDesign:PackIcon Kind="AirConditioner" 
+                                                     Width="32" Height="32"
+                                                     Foreground="{StaticResource PrimaryBrush}"/>
+                            <TextBlock Text="AC" 
+                                       FontSize="24" 
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="8,0,0,0"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Sistema Control AC"
+                                   FontSize="20"
+                                   FontWeight="Medium"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,16,0,0"/>
+
+                        <TextBlock Text="Gestión Profesional de Aires Acondicionados"
+                                   FontSize="14"
+                                   Foreground="#B3E5FC"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- Contenido del Login -->
-            <Grid Grid.Row="1" Margin="40,30">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Logo o Icono -->
-                <Border Grid.Row="0" 
-                        Width="80" 
-                        Height="80"
-                        Background="#E3F2FD"
-                        CornerRadius="40"
-                        Margin="0,0,0,20">
-                    <TextBlock Text="AC"
-                               FontSize="32"
-                               FontWeight="Bold"
-                               Foreground="#2196F3"
+            <!-- Formulario de login -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Auto"
+                          Padding="32,24" Margin="13,10,10,0">
+                <StackPanel>
+                    <!-- Título del formulario -->
+                    <TextBlock Text="Iniciar Sesión"
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </Border>
+                               Margin="0,0,0,8"/>
 
-                <!-- Título -->
-                <TextBlock Grid.Row="1"
-                           Text="Iniciar Sesión"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="#333"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,5"/>
+                    <TextBlock Text="Ingrese sus credenciales para continuar"
+                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                               HorizontalAlignment="Center"
+                               Foreground="{StaticResource MaterialDesignBodyLight}"
+                               Margin="0,0,0,32"/>
 
-                <TextBlock Grid.Row="2"
-                           Text="Ingrese sus credenciales"
-                           FontSize="14"
-                           Foreground="#666"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,30"/>
+                    <!-- Campo Usuario -->
+                    <TextBox materialDesign:HintAssist.Hint="Usuario"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,16"
+                             FontSize="16">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Tab" Command="{Binding FocusPasswordCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
 
-                <!-- Usuario -->
-                <StackPanel Grid.Row="3" Margin="0,0,0,15">
-                    <TextBlock Text="Usuario"
-                               FontSize="12"
-                               Foreground="#666"
-                               Margin="0,0,0,5"/>
-                    <Border BorderBrush="#DDD"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Height="40">
-                        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                                 BorderThickness="0"
-                                 Padding="10,0"
-                                 VerticalContentAlignment="Center"
-                                 FontSize="14"/>
+                    <!-- Campo Contraseña -->
+                    <PasswordBox x:Name="PasswordBox"
+                                 materialDesign:HintAssist.Hint="Contraseña"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 Style="{StaticResource MaterialDesignOutlinedPasswordBox}"
+                                 PasswordChanged="PasswordBox_PasswordChanged"
+                                 Margin="0,0,0,16"
+                                 FontSize="16">
+                        <PasswordBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding LoginCommand}"/>
+                        </PasswordBox.InputBindings>
+                    </PasswordBox>
+
+                    <!-- Recordar usuario -->
+                    <CheckBox Content="Recordar usuario"
+                              IsChecked="{Binding RememberMe}"
+                              Style="{StaticResource MaterialDesignCheckBox}"
+                              Margin="0,0,0,24"/>
+
+                    <!-- Mensaje de error -->
+                    <Border x:Name="ErrorMessageBorder"
+                            Background="{StaticResource ErrorBrush}"
+                            CornerRadius="4"
+                            Padding="16,12"
+                            Margin="0,0,0,16"
+                            Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AlertCircle"
+                                                     Width="20" Height="20"
+                                                     Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock x:Name="ErrorMessageTextBlock"
+                                       Text="{Binding ErrorMessage}"
+                                       Foreground="White"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Border>
+
+                    <!-- Botón de login -->
+                    <Button x:Name="LoginButton"
+                            Content="INICIAR SESIÓN"
+                            Command="{Binding LoginCommand}"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Height="48"
+                            Margin="0,0,0,16"
+                            IsDefault="True"
+                            Background="{StaticResource PrimaryBrush}"/>
+
+                    <!-- Indicador de carga -->
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Margin="0,16,0,0">
+                        <ProgressBar x:Name="LoadingProgressBar"
+                                     Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     IsIndeterminate="True"
+                                     Width="24" Height="24"
+                                     Margin="0,0,12,0"/>
+                        <TextBlock Text="Validando credenciales..."
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    </StackPanel>
+
+                    <!-- Enlaces adicionales -->
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,24,0,0">
+                        <Button Content="¿Olvidó su contraseña?"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Foreground="{StaticResource PrimaryHueMidBrush}"/>
+                    </StackPanel>
                 </StackPanel>
-
-                <!-- Contraseña -->
-                <StackPanel Grid.Row="4" Margin="0,0,0,10">
-                    <TextBlock Text="Contraseña"
-                               FontSize="12"
-                               Foreground="#666"
-                               Margin="0,0,0,5"/>
-                    <Border BorderBrush="#DDD"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Height="40">
-                        <PasswordBox x:Name="PasswordBox"
-                                     BorderThickness="0"
-                                     Padding="10,0"
-                                     VerticalContentAlignment="Center"
-                                     FontSize="14"
-                                     PasswordChanged="PasswordBox_PasswordChanged"/>
-                    </Border>
-                </StackPanel>
-
-                <!-- Recordar usuario -->
-                <CheckBox Grid.Row="5"
-                          Content="Recordar usuario"
-                          IsChecked="{Binding RememberMe}"
-                          Foreground="#666"
-                          Margin="0,0,0,20"/>
-
-                <!-- Mensaje de error (sin convertidor) -->
-                <TextBlock Grid.Row="6"
-                           Name="ErrorMessageTextBlock"
-                           Text="{Binding ErrorMessage}"
-                           Foreground="#F44336"
-                           FontSize="12"
-                           TextWrapping="Wrap"
-                           Margin="0,0,0,10"
-                           Visibility="Collapsed"/>
-
-                <!-- Botón Login -->
-                <Button Grid.Row="7"
-                        Name="LoginButton"
-                        Content="Iniciar Sesión"
-                        Command="{Binding LoginCommand}"
-                        Height="45"
-                        Background="#2196F3"
-                        Foreground="White"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        VerticalAlignment="Top">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="5">
-                                <ContentPresenter HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="#2196F3"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#1976D2"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Background" Value="#CCCCCC"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
-                <!-- Indicador de carga (sin convertidor) -->
-                <ProgressBar Grid.Row="7"
-                             Name="LoadingProgressBar"
-                             IsIndeterminate="True"
-                             Height="3"
-                             VerticalAlignment="Bottom"
-                             Visibility="Collapsed"
-                             Foreground="#2196F3"/>
-            </Grid>
+            </ScrollViewer>
         </Grid>
-    </Border>
+    </materialDesign:Card>
 </Window>
