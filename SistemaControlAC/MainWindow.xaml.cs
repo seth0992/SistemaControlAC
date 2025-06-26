@@ -56,76 +56,14 @@ namespace SistemaControlAC
         private void SetupMenuHandlers()
         {
             // Configurar event handlers para los botones del menú
-            var app = (App)Application.Current;
-
-            // Buscar botones por contenido
-            foreach (var child in GetMenuButtons())
-            {
-                if (child is System.Windows.Controls.Button button)
-                {
-                    var content = button.Content?.ToString();
-                    switch (content)
-                    {
-                        case "🏠 Inicio":
-                            button.Click += (s, e) => NavigateToHome();
-                            break;
-                        case "👥 Clientes":
-                            button.Click += (s, e) => NavigateToClientes();
-                            break;
-                        case "❄️ Equipos":
-                            button.Click += (s, e) => NavigateToEquipos();
-                            break;
-                        case "📅 Citas":
-                            button.Click += (s, e) => NavigateToCitas();
-                            break;
-                        case "🔧 Órdenes de Trabajo":
-                            button.Click += (s, e) => NavigateToOrdenes();
-                            break;
-                        case "📊 Reportes":
-                            button.Click += (s, e) => NavigateToReportes();
-                            break;
-                        case "👤 Usuarios":
-                            button.Click += (s, e) => NavigateToUsuarios();
-                            break;
-                        case "⚙️ Configuración":
-                            button.Click += (s, e) => NavigateToConfiguracion();
-                            break;
-                    }
-                }
-            }
-        }
-
-        private System.Collections.Generic.IEnumerable<System.Windows.DependencyObject> GetMenuButtons()
-        {
-            // Buscar todos los botones en el menú lateral
-            var menuPanel = FindName("MenuPanel") as System.Windows.Controls.StackPanel;
-            if (menuPanel == null)
-            {
-                // Buscar en el árbol visual
-                return FindVisualChildren<System.Windows.Controls.Button>(this);
-            }
-
-            return FindVisualChildren<System.Windows.Controls.Button>(menuPanel);
-        }
-
-        private static System.Collections.Generic.IEnumerable<T> FindVisualChildren<T>(System.Windows.DependencyObject depObj) where T : System.Windows.DependencyObject
-        {
-            if (depObj != null)
-            {
-                for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(depObj); i++)
-                {
-                    var child = System.Windows.Media.VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
-                    {
-                        yield return (T)child;
-                    }
-
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
-                }
-            }
+            HomeMenuButton.Click += (s, e) => NavigateToHome();
+            ClientesMenuButton.Click += (s, e) => NavigateToClientes();
+            EquiposMenuButton.Click += (s, e) => NavigateToEquipos();
+            CitasMenuButton.Click += (s, e) => NavigateToCitas();
+            OrdenesMenuButton.Click += (s, e) => NavigateToOrdenes();
+            ReportesMenuButton.Click += (s, e) => NavigateToReportes();
+            UsersMenuButton.Click += (s, e) => NavigateToUsuarios();
+            ConfigMenuButton.Click += (s, e) => NavigateToConfiguracion();
         }
 
         #region Navegación
@@ -291,16 +229,6 @@ namespace SistemaControlAC
                 _sessionService.SessionExpired -= OnSessionExpired;
             }
             base.OnClosed(e);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnClientes_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

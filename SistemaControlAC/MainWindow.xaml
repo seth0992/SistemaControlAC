@@ -3,195 +3,295 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:SistemaControlAC"
         mc:Ignorable="d"
-         Title="Sistema Control AC - Panel Principal" 
+        Title="Sistema Control AC - Panel Principal" 
         Height="720" 
-        Width="1280" WindowStartupLocation="CenterScreen"
-        WindowState="Maximized">
+        Width="1280" 
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Window.Resources>
-        <Style x:Key="MenuButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
+        <Style x:Key="MenuButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Padding" Value="16,12"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                            Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Margin" Value="4,1"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#E3F2FD"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#BBDEFB"/>
+                    <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <!-- Barra superior -->
-        <Border Grid.Row="0" 
-                Background="#2196F3"
-                Height="60">
-            <Grid>
+        <Style x:Key="MenuSectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
+            <Setter Property="Margin" Value="16,24,16,8"/>
+            <!--<Setter Property="Text" Value="{Binding Content, RelativeSource={RelativeSource Self}, Converter={x:Static materialDesign:UppercaseConverter.Instance}}"/>-->
+        </Style>
+    </Window.Resources>
+
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Barra superior Material -->
+            <materialDesign:ColorZone Grid.Row="0" 
+                                      Mode="PrimaryMid"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="64" Margin="16,0" LastChildFill="False">
+                    <!-- Logo y título -->
+                    <StackPanel Orientation="Horizontal" 
+                                DockPanel.Dock="Left"
+                                VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="AirConditioner" 
+                                                 Width="32" Height="32"
+                                                 Foreground="White"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Sistema Control AC"
+                                   FontSize="20"
+                                   FontWeight="Medium"
+                                   Foreground="White"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Información del usuario -->
+                    <StackPanel Orientation="Horizontal" 
+                                DockPanel.Dock="Right"
+                                VerticalAlignment="Center">
+                        <!-- Notificaciones -->
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                Margin="0,0,8,0"
+                                ToolTip="Notificaciones">
+                            <materialDesign:PackIcon Kind="Bell" Width="24" Height="24"/>
+                        </Button>
+
+                        <!-- Información del usuario -->
+                        <Border Background="{StaticResource PrimaryHueDarkBrush}"
+                                CornerRadius="20"
+                                Padding="12,6"
+                                Margin="0,0,12,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Account" 
+                                                         Width="20" Height="20"
+                                                         Foreground="White"
+                                                         Margin="0,0,8,0"/>
+                                <StackPanel>
+                                    <TextBlock x:Name="UserNameText"
+                                               Foreground="White"
+                                               FontSize="14"
+                                               FontWeight="Medium"/>
+                                    <TextBlock x:Name="UserRoleText"
+                                               Foreground="#B3E5FC"
+                                               FontSize="11"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Menú del usuario -->
+                        <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges"
+                                                 StaysOpen="False">
+                            <StackPanel Width="200">
+                                <Button 
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="16,8">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="AccountEdit" 
+                                                                     Width="16" Height="16"
+                                                                     Margin="0,0,12,0"/>
+                                            <TextBlock Text="Mi Perfil"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="16,8">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Settings" 
+                                                                     Width="16" Height="16"
+                                                                     Margin="0,0,12,0"/>
+                                            <TextBlock Text="Configuración"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
+                                <Separator Margin="0,8"/>
+
+                                <Button
+                                        Click="LogoutButton_Click"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="16,8">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Logout" 
+                                                                     Width="16" Height="16"
+                                                                     Margin="0,0,12,0"/>
+                                            <TextBlock Text="Cerrar Sesión"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </materialDesign:PopupBox>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Contenido principal -->
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="280"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Logo y título -->
-                <StackPanel Grid.Column="0" 
-                            Orientation="Horizontal"
-                            Margin="20,0">
-                    <TextBlock Text="AC"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"/>
-                    <TextBlock Text="Sistema Control AC"
-                               FontSize="20"
-                               Foreground="White"
-                               VerticalAlignment="Center"/>
-                </StackPanel>
+                <!-- Navegación lateral -->
+                <materialDesign:Card Grid.Column="0" 
+                                     materialDesign:ElevationAssist.Elevation="Dp2"
+                                     Margin="0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="MenuPanel">
+                            <!-- Sección principal -->
+                            <TextBlock Text="MENÚ PRINCIPAL" Style="{StaticResource MenuSectionHeaderStyle}"/>
 
-                <!-- Información del usuario -->
-                <StackPanel Grid.Column="2" 
-                            Orientation="Horizontal"
-                            Margin="20,0"
-                            VerticalAlignment="Center">
-                    <TextBlock x:Name="UserNameText"
-                               Foreground="White"
-                               FontSize="14"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"/>
-                    <TextBlock x:Name="UserRoleText"
-                               Foreground="#B3E5FC"
+                            <Button x:Name="HomeMenuButton" Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Home" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Inicio" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="ClientesMenuButton" Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="AccountGroup" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Clientes" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="EquiposMenuButton" Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="AirConditioner" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Equipos" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="CitasMenuButton" Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Calendar" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Citas" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="OrdenesMenuButton" Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Tools" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Órdenes de Trabajo" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="ReportesMenuButton" Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ChartBox" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Reportes" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Sección administración -->
+                            <TextBlock Text="ADMINISTRACIÓN" 
+                                       Style="{StaticResource MenuSectionHeaderStyle}"
+                                       x:Name="AdminSectionTitle"/>
+
+                            <Button x:Name="UsersMenuButton"
+                                    Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="AccountMultiple" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Usuarios" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="ConfigMenuButton"
+                                    Style="{StaticResource MenuButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Settings" Width="20" Height="20" Margin="0,0,16,0"/>
+                                    <TextBlock Text="Configuración" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Información adicional -->
+                            <Border Background="{DynamicResource MaterialDesignDivider}"
+                                    Margin="16,32,16,16"
+                                    Padding="16"
+                                    CornerRadius="8">
+                                <StackPanel>
+                                    <TextBlock Text="Sistema Control Citas"
+                                               FontWeight="Medium"
+                                               FontSize="14"
+                                               Margin="0,0,0,4"/>
+                                    <TextBlock Text="Versión 1.0.0"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                    <TextBlock Text="© 2025 ThurderWolf Tech"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                               Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </materialDesign:Card>
+
+                <!-- Área de contenido -->
+                <Border Grid.Column="1" 
+                        Background="{DynamicResource MaterialDesignPaper}"
+                        Margin="8,0,0,0">
+                    <ContentControl x:Name="ContentArea"
+                                    Margin="24"/>
+                </Border>
+            </Grid>
+
+            <!-- Barra de estado -->
+            <materialDesign:ColorZone Grid.Row="2" 
+                                      Mode="PrimaryLight"
+                                      materialDesign:ElevationAssist.Elevation="Dp1">
+                <DockPanel Height="32" Margin="16,0">
+                    <TextBlock Text="Sistema Control AC v1.0"
+                               DockPanel.Dock="Left"
+                               Foreground="{DynamicResource MaterialDesignBody}"
                                FontSize="12"
-                               VerticalAlignment="Center"
-                               Margin="0,0,20,0"/>
-                    <Button Content="Cerrar Sesión"
-                            Click="LogoutButton_Click"
-                            Background="#1976D2"
-                            Foreground="White"
-                            BorderThickness="0"
-                            Padding="15,8"
-                            Cursor="Hand">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}"
-                                        CornerRadius="5"
-                                        Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
+                               VerticalAlignment="Center"/>
 
-        <!-- Contenido principal -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Menú lateral -->
-            <Border Grid.Column="0"
-                    Background="#F5F5F5"
-                    BorderBrush="#E0E0E0"
-                    BorderThickness="0,0,1,0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="0,20" x:Name="MenuPanel">
-                        <TextBlock Text="MENÚ PRINCIPAL"
+                    <StackPanel Orientation="Horizontal" 
+                                DockPanel.Dock="Right"
+                                VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Circle" 
+                                                 Width="8" Height="8"
+                                                 Foreground="{StaticResource SuccessBrush}"
+                                                 Margin="0,0,8,0"/>
+                        <TextBlock x:Name="StatusText"
+                                   Foreground="{DynamicResource MaterialDesignBody}"
                                    FontSize="12"
-                                   FontWeight="Bold"
-                                   Foreground="#666"
-                                   Margin="20,0,0,15"/>
-
-                        <!-- Elementos del menú -->
-                        <Button Content="🏠 Inicio"
-                                Style="{StaticResource MenuButtonStyle}"/>
-                        <Button Content="👥 Clientes"
-                                Style="{StaticResource MenuButtonStyle}"/>
-                        <Button Content="❄️ Equipos"
-                                Style="{StaticResource MenuButtonStyle}"/>
-                        <Button Content="📅 Citas"
-                                Style="{StaticResource MenuButtonStyle}"/>
-                        <Button Content="🔧 Órdenes de Trabajo"
-                                Style="{StaticResource MenuButtonStyle}"/>
-                        <Button Content="📊 Reportes"
-                                Style="{StaticResource MenuButtonStyle}"/>
-
-                        <Separator Margin="20,20"/>
-
-                        <TextBlock Text="ADMINISTRACIÓN"
-                                   FontSize="12"
-                                   FontWeight="Bold"
-                                   Foreground="#666"
-                                   Margin="20,0,0,15"
-                                   x:Name="AdminSectionTitle"/>
-
-                        <Button Content="👤 Usuarios"
-                                x:Name="UsersMenuButton"
-                                Style="{StaticResource MenuButtonStyle}"/>
-                        <Button Content="⚙️ Configuración"
-                                x:Name="ConfigMenuButton"
-                                Style="{StaticResource MenuButtonStyle}"/>
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
-                </ScrollViewer>
-            </Border>
-
-            <!-- Área de contenido -->
-            <Border Grid.Column="1"
-                    Background="White">
-                <ContentControl x:Name="ContentArea"
-                                Margin="20"/>
-            </Border>
+                </DockPanel>
+            </materialDesign:ColorZone>
         </Grid>
-
-        <!-- Barra de estado -->
-        <Border Grid.Row="2"
-                Background="#F5F5F5"
-                BorderBrush="#E0E0E0"
-                BorderThickness="0,1,0,0"
-                Height="30">
-            <Grid>
-                <TextBlock Text="Sistema Control AC v1.0"
-                           Foreground="#666"
-                           FontSize="12"
-                           VerticalAlignment="Center"
-                           Margin="10,0"/>
-                <TextBlock x:Name="StatusText"
-                           HorizontalAlignment="Right"
-                           Foreground="#666"
-                           FontSize="12"
-                           VerticalAlignment="Center"
-                           Margin="10,0"/>
-            </Grid>
-        </Border>
-    </Grid>
-
-    
+    </materialDesign:DialogHost>
 </Window>

@@ -3,355 +3,590 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:SistemaControlAC.View"
         mc:Ignorable="d"
         Title="{Binding Title}" 
-        Height="700" 
-        Width="900"
-        WindowStartupLocation="CenterOwner">
+        Height="800" 
+        Width="1100"
+        WindowStartupLocation="CenterOwner"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FontFamily="{DynamicResource MaterialDesignFont}">
 
-    <Window.Resources>
-        <Style x:Key="InfoLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="Margin" Value="0,0,10,0"/>
-        </Style>
+    <materialDesign:DialogHost Identifier="ClienteDetailDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Style x:Key="InfoValueStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#666"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-        </Style>
+            <!-- Encabezado del cliente -->
+            <materialDesign:ColorZone Grid.Row="0" 
+                                      Mode="PrimaryMid"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <Grid Height="120" Margin="32,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#2196F3"/>
-            <Setter Property="Margin" Value="0,20,0,15"/>
-        </Style>
-
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="MinWidth" Value="100"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="StatCardStyle" TargetType="Border">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#E0E0E0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Padding" Value="15"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-    </Window.Resources>
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Encabezado -->
-        <Border Grid.Row="0" 
-                Background="#2196F3" 
-                Padding="20,15">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <TextBlock Text="👤" 
-                               FontSize="24" 
-                               Margin="0,0,10,0" 
-                               VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding NombreCompleto}" 
-                               FontSize="20" 
-                               FontWeight="Bold" 
-                               Foreground="White" 
-                               VerticalAlignment="Center"/>
-                </StackPanel>
-
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Border Background="{Binding Cliente.Activo, Converter={StaticResource BooleanToColorConverter}}" 
-                            CornerRadius="12" 
-                            Padding="12,6">
-                        <TextBlock Text="{Binding EstadoFormateado}" 
-                                   Foreground="White" 
-                                   FontSize="12" 
-                                   FontWeight="Bold"/>
+                    <!-- Avatar del cliente -->
+                    <Border Grid.Column="0" 
+                            Background="White"
+                            Width="80" Height="80"
+                            CornerRadius="40"
+                            VerticalAlignment="Center"
+                            Margin="0,0,24,0">
+                        <TextBlock Text="{Binding Cliente.Nombre}"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   FontSize="32"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
                     </Border>
-                </StackPanel>
-            </Grid>
-        </Border>
 
-        <!-- Contenido -->
-        <ScrollViewer Grid.Row="1" 
-                      VerticalScrollBarVisibility="Auto" 
-                      Padding="20">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
+                    <!-- Información principal -->
+                    <StackPanel Grid.Column="1" 
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{Binding NombreCompleto}" 
+                                   FontSize="24" 
+                                   FontWeight="Medium" 
+                                   Foreground="White"
+                                   Margin="0,0,0,4"/>
 
-                <!-- Información del Cliente -->
-                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <materialDesign:PackIcon Kind="Phone" 
+                                                     Width="16" Height="16"
+                                                     Foreground="#B3E5FC"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding TelefonoFormateado}" 
+                                       Foreground="#B3E5FC"
+                                       FontSize="14"/>
 
-                    <!-- Estadísticas Rápidas -->
-                    <TextBlock Text="RESUMEN" Style="{StaticResource SectionHeaderStyle}"/>
-                    <UniformGrid Columns="3" Margin="0,0,0,20">
-                        <Border Style="{StaticResource StatCardStyle}">
-                            <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding TotalEquipos}" 
-                                           FontSize="24" 
-                                           FontWeight="Bold" 
-                                           Foreground="#4CAF50" 
-                                           HorizontalAlignment="Center"/>
-                                <TextBlock Text="Equipos" 
-                                           FontSize="12" 
-                                           Foreground="#666" 
-                                           HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource StatCardStyle}">
-                            <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding EquiposActivos}" 
-                                           FontSize="24" 
-                                           FontWeight="Bold" 
-                                           Foreground="#2196F3" 
-                                           HorizontalAlignment="Center"/>
-                                <TextBlock Text="Activos" 
-                                           FontSize="12" 
-                                           Foreground="#666" 
-                                           HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource StatCardStyle}">
-                            <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding TotalCitas}" 
-                                           FontSize="24" 
-                                           FontWeight="Bold" 
-                                           Foreground="#FF9800" 
-                                           HorizontalAlignment="Center"/>
-                                <TextBlock Text="Citas" 
-                                           FontSize="12" 
-                                           Foreground="#666" 
-                                           HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                    </UniformGrid>
+                            <materialDesign:PackIcon Kind="Email" 
+                                                     Width="16" Height="16"
+                                                     Foreground="#B3E5FC"
+                                                     Margin="24,0,8,0"/>
+                            <TextBlock Text="{Binding Cliente.Email}" 
+                                       Foreground="#B3E5FC"
+                                       FontSize="14"/>
+                        </StackPanel>
 
-                    <!-- Información Personal -->
-                    <TextBlock Text="INFORMACIÓN PERSONAL" Style="{StaticResource SectionHeaderStyle}"/>
-                    <Grid Margin="0,0,0,20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="MapMarker" 
+                                                     Width="16" Height="16"
+                                                     Foreground="#B3E5FC"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding DireccionCompleta}" 
+                                       Foreground="#B3E5FC"
+                                       FontSize="14"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxWidth="400"/>
+                        </StackPanel>
+                    </StackPanel>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Nombre:" Style="{StaticResource InfoLabelStyle}"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding NombreCompleto}" Style="{StaticResource InfoValueStyle}"/>
+                    <!-- Estado y acciones -->
+                    <StackPanel Grid.Column="2" 
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right">
+                        <materialDesign:Chip Content="{Binding EstadoFormateado}"
+                                             IconBackground="{Binding Cliente.Activo, Converter={StaticResource BooleanToColorConverter}}"
+                                             IconForeground="White"
+                                             Margin="0,0,0,16">
+                            <materialDesign:Chip.Icon>
+                                <materialDesign:PackIcon Kind="CheckCircle" />
+                            </materialDesign:Chip.Icon>
+                        </materialDesign:Chip>
 
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Teléfono:" Style="{StaticResource InfoLabelStyle}"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TelefonoFormateado}" Style="{StaticResource InfoValueStyle}"/>
+                        <TextBlock Text="{Binding FechaRegistroFormateada, StringFormat='Cliente desde: {0}'}" 
+                                   Foreground="#B3E5FC"
+                                   FontSize="12"
+                                   HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:ColorZone>
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Email:" Style="{StaticResource InfoLabelStyle}"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Cliente.Email}" Style="{StaticResource InfoValueStyle}"/>
+            <!-- Contenido principal -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Auto" 
+                          Padding="32,24">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Registro:" Style="{StaticResource InfoLabelStyle}"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding FechaRegistroFormateada}" Style="{StaticResource InfoValueStyle}"/>
-                    </Grid>
+                    <!-- Columna izquierda -->
+                    <StackPanel Grid.Column="0">
+                        <!-- Estadísticas rápidas -->
+                        <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                             Margin="0,0,0,24">
+                            <StackPanel Margin="24">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <materialDesign:PackIcon Kind="ChartBox" 
+                                                             Width="24" Height="24"
+                                                             Foreground="{StaticResource PrimaryBrush}"
+                                                             Margin="0,0,12,0"/>
+                                    <TextBlock Text="RESUMEN" 
+                                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                </StackPanel>
 
-                    <!-- Dirección -->
-                    <TextBlock Text="DIRECCIÓN" Style="{StaticResource SectionHeaderStyle}"/>
-                    <TextBlock Text="{Binding DireccionCompleta}" 
-                               Style="{StaticResource InfoValueStyle}" 
-                               Margin="0,0,0,20"/>
-
-                    <!-- Notas -->
-                    <TextBlock Text="NOTAS" Style="{StaticResource SectionHeaderStyle}"/>
-                    <TextBlock Text="{Binding NotasFormateadas}" 
-                               Style="{StaticResource InfoValueStyle}"/>
-                </StackPanel>
-
-                <!-- Equipos y Citas -->
-                <StackPanel Grid.Column="1" Margin="10,0,0,0">
-
-                    <!-- Equipos -->
-                    <TextBlock Text="EQUIPOS" Style="{StaticResource SectionHeaderStyle}"/>
-                    <ListView ItemsSource="{Binding Equipos}" 
-                              Height="200" 
-                              Margin="0,0,0,20">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="White" 
-                                        BorderBrush="#E0E0E0" 
-                                        BorderThickness="1" 
-                                        CornerRadius="5" 
-                                        Padding="10" 
-                                        Margin="0,2">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <StackPanel Grid.Column="0">
-                                            <TextBlock Text="{Binding Marca}" 
+                                <UniformGrid Columns="3">
+                                    <!-- Total Equipos -->
+                                    <Border Background="{StaticResource AccentBrush}"
+                                            CornerRadius="8"
+                                            Padding="16,12"
+                                            Margin="0,0,4,0">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="AirConditioner"
+                                                                     Width="24" Height="24"
+                                                                     Foreground="White"
+                                                                     HorizontalAlignment="Center"
+                                                                     Margin="0,0,0,8"/>
+                                            <TextBlock Text="{Binding TotalEquipos}" 
+                                                       FontSize="24" 
                                                        FontWeight="Bold" 
-                                                       FontSize="14"/>
-                                            <TextBlock Text="{Binding Modelo}" 
-                                                       Foreground="#666" 
-                                                       FontSize="12"/>
-                                            <TextBlock Text="{Binding Ubicacion}" 
-                                                       Foreground="#666" 
-                                                       FontSize="12"/>
-                                        </StackPanel>
-
-                                        <Border Grid.Column="1" 
-                                                Background="{Binding Activo, Converter={StaticResource BooleanToColorConverter}}" 
-                                                CornerRadius="8" 
-                                                Padding="8,4">
-                                            <TextBlock Text="{Binding Activo, Converter={StaticResource BooleanToStatusConverter}}" 
-                                                       Foreground="White" 
-                                                       FontSize="10" 
-                                                       FontWeight="Bold"/>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-
-                    <!-- Citas Recientes -->
-                    <TextBlock Text="CITAS RECIENTES" Style="{StaticResource SectionHeaderStyle}"/>
-                    <ListView ItemsSource="{Binding Citas}" 
-                              Height="200">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="White" 
-                                        BorderBrush="#E0E0E0" 
-                                        BorderThickness="1" 
-                                        CornerRadius="5" 
-                                        Padding="10" 
-                                        Margin="0,2">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <StackPanel Grid.Column="0">
-                                            <TextBlock Text="{Binding TipoServicio}" 
-                                                       FontWeight="Bold" 
-                                                       FontSize="14"/>
-                                            <TextBlock Text="{Binding FechaProgramada, StringFormat=dd/MM/yyyy HH:mm}" 
-                                                       Foreground="#666" 
-                                                       FontSize="12"/>
-                                            <TextBlock Text="{Binding Descripcion}" 
-                                                       Foreground="#666" 
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Equipos" 
                                                        FontSize="12" 
-                                                       TextTrimming="CharacterEllipsis"/>
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
                                         </StackPanel>
+                                    </Border>
 
-                                        <Border Grid.Column="1" 
-                                                Background="{Binding Estado, Converter={StaticResource StatusToColorConverter}}" 
-                                                CornerRadius="8" 
-                                                Padding="8,4">
-                                            <TextBlock Text="{Binding Estado}" 
-                                                       Foreground="White" 
-                                                       FontSize="10" 
-                                                       FontWeight="Bold"/>
-                                        </Border>
-                                    </Grid>
+                                    <!-- Equipos Activos -->
+                                    <Border Background="{StaticResource PrimaryBrush}"
+                                            CornerRadius="8"
+                                            Padding="16,12"
+                                            Margin="4,0,4,0">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="CheckCircle"
+                                                                     Width="24" Height="24"
+                                                                     Foreground="White"
+                                                                     HorizontalAlignment="Center"
+                                                                     Margin="0,0,0,8"/>
+                                            <TextBlock Text="{Binding EquiposActivos}" 
+                                                       FontSize="24" 
+                                                       FontWeight="Bold" 
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Activos" 
+                                                       FontSize="12" 
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Total Citas -->
+                                    <Border Background="{StaticResource WarningBrush}"
+                                            CornerRadius="8"
+                                            Padding="16,12"
+                                            Margin="4,0,0,0">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Calendar"
+                                                                     Width="24" Height="24"
+                                                                     Foreground="White"
+                                                                     HorizontalAlignment="Center"
+                                                                     Margin="0,0,0,8"/>
+                                            <TextBlock Text="{Binding TotalCitas}" 
+                                                       FontSize="24" 
+                                                       FontWeight="Bold" 
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Citas" 
+                                                       FontSize="12" 
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </UniformGrid>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <!-- Información de contacto -->
+                        <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                             Margin="0,0,0,24">
+                            <StackPanel Margin="24">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <materialDesign:PackIcon Kind="ContactMail" 
+                                                             Width="24" Height="24"
+                                                             Foreground="{StaticResource PrimaryBrush}"
+                                                             Margin="0,0,12,0"/>
+                                    <TextBlock Text="INFORMACIÓN DE CONTACTO" 
+                                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <!-- Teléfonos -->
+                                    <Border Background="{DynamicResource MaterialDesignToolBarBackground}"
+                                            CornerRadius="4"
+                                            Padding="16,12"
+                                            Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Phone" 
+                                                                     Width="20" Height="20"
+                                                                     Foreground="{StaticResource PrimaryBrush}"
+                                                                     Margin="0,0,12,0"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Teléfono Principal"
+                                                           FontSize="12"
+                                                           Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                                <TextBlock Text="{Binding TelefonoFormateado}"
+                                                           FontWeight="Medium"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Email -->
+                                    <Border Background="{DynamicResource MaterialDesignToolBarBackground}"
+                                            CornerRadius="4"
+                                            Padding="16,12"
+                                            Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Email" 
+                                                                     Width="20" Height="20"
+                                                                     Foreground="{StaticResource PrimaryBrush}"
+                                                                     Margin="0,0,12,0"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Correo Electrónico"
+                                                           FontSize="12"
+                                                           Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                                <TextBlock Text="{Binding Cliente.Email}"
+                                                           FontWeight="Medium"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Dirección -->
+                                    <Border Background="{DynamicResource MaterialDesignToolBarBackground}"
+                                            CornerRadius="4"
+                                            Padding="16,12">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="MapMarker" 
+                                                                     Width="20" Height="20"
+                                                                     Foreground="{StaticResource PrimaryBrush}"
+                                                                     Margin="0,0,12,0"/>
+                                            <StackPanel>
+                                                <TextBlock Text="Dirección"
+                                                           FontSize="12"
+                                                           Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                                <TextBlock Text="{Binding DireccionCompleta}"
+                                                           FontWeight="Medium"
+                                                           TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <!-- Notas -->
+                        <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2">
+                            <StackPanel Margin="24">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                    <materialDesign:PackIcon Kind="NoteText" 
+                                                             Width="24" Height="24"
+                                                             Foreground="{StaticResource PrimaryBrush}"
+                                                             Margin="0,0,12,0"/>
+                                    <TextBlock Text="NOTAS ADICIONALES" 
+                                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                </StackPanel>
+
+                                <Border Background="{DynamicResource MaterialDesignToolBarBackground}"
+                                        CornerRadius="4"
+                                        Padding="16"
+                                        MinHeight="60">
+                                    <TextBlock Text="{Binding NotasFormateadas}"
+                                               TextWrapping="Wrap"/>
                                 </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </StackPanel>
+
+                    <!-- Columna derecha -->
+                    <StackPanel Grid.Column="2">
+                        <!-- Equipos -->
+                        <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                             Margin="0,0,0,24">
+                            <StackPanel Margin="24">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <materialDesign:PackIcon Kind="AirConditioner" 
+                                                             Width="24" Height="24"
+                                                             Foreground="{StaticResource PrimaryBrush}"
+                                                             Margin="0,0,12,0"/>
+                                    <TextBlock Text="EQUIPOS" 
+                                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                </StackPanel>
+
+                                <ScrollViewer Height="250" 
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding Equipos}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <materialDesign:Card Margin="0,0,0,12"
+                                                                     materialDesign:ElevationAssist.Elevation="Dp1">
+                                                    <Grid Margin="16">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <materialDesign:PackIcon Grid.Column="0"
+                                                                                 Kind="AirConditioner" 
+                                                                                 Width="32" Height="32"
+                                                                                 Foreground="{StaticResource AccentBrush}"
+                                                                                 Margin="0,0,12,0"/>
+
+                                                        <StackPanel Grid.Column="1">
+                                                            <TextBlock Text="{Binding Marca}" 
+                                                                       FontWeight="Medium" 
+                                                                       FontSize="14"/>
+                                                            <TextBlock Text="{Binding Modelo}" 
+                                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                       FontSize="13"/>
+                                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                                <materialDesign:PackIcon Kind="MapMarker" 
+                                                                                         Width="12" Height="12"
+                                                                                         Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                                         Margin="0,0,4,0"/>
+                                                                <TextBlock Text="{Binding Ubicacion}" 
+                                                                           Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                           FontSize="12"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+
+                                                        <materialDesign:Chip Grid.Column="2"
+                                                                             Content="{Binding Activo, Converter={StaticResource BooleanToStatusConverter}}"
+                                                                             IconBackground="{Binding Activo, Converter={StaticResource BooleanToColorConverter}}"
+                                                                             IconForeground="White"
+                                                                             FontSize="10">
+                                                            <materialDesign:Chip.Icon>
+                                                                <materialDesign:PackIcon Kind="CheckCircle" />
+                                                            </materialDesign:Chip.Icon>
+                                                        </materialDesign:Chip>
+                                                    </Grid>
+                                                </materialDesign:Card>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <!-- Mensaje cuando no hay equipos -->
+                                <StackPanel Visibility="{Binding TotalEquipos, Converter={x:Static local:CountToVisibilityConverter.Instance}}"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,40,0,0">
+                                    <materialDesign:PackIcon Kind="AirConditioner" 
+                                                             Width="48" Height="48"
+                                                             Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                             HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Sin equipos registrados"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,12,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <!-- Citas recientes -->
+                        <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2">
+                            <StackPanel Margin="24">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <materialDesign:PackIcon Kind="Calendar" 
+                                                             Width="24" Height="24"
+                                                             Foreground="{StaticResource PrimaryBrush}"
+                                                             Margin="0,0,12,0"/>
+                                    <TextBlock Text="CITAS RECIENTES" 
+                                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                </StackPanel>
+
+                                <ScrollViewer Height="250" 
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding Citas}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <materialDesign:Card Margin="0,0,0,12"
+                                                                     materialDesign:ElevationAssist.Elevation="Dp1">
+                                                    <Grid Margin="16">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border Grid.Column="0"
+                                                                Background="{StaticResource PrimaryLightBrush}"
+                                                                Width="40" Height="40"
+                                                                CornerRadius="20"
+                                                                Margin="0,0,12,0">
+                                                            <materialDesign:PackIcon Kind="Calendar" 
+                                                                                     Width="20" Height="20"
+                                                                                     Foreground="White"
+                                                                                     HorizontalAlignment="Center"
+                                                                                     VerticalAlignment="Center"/>
+                                                        </Border>
+
+                                                        <StackPanel Grid.Column="1">
+                                                            <TextBlock Text="{Binding TipoServicio}" 
+                                                                       FontWeight="Medium" 
+                                                                       FontSize="14"/>
+                                                            <TextBlock Text="{Binding FechaProgramada, StringFormat=dd/MM/yyyy HH:mm}" 
+                                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                       FontSize="13"/>
+                                                            <TextBlock Text="{Binding Descripcion}" 
+                                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                       FontSize="12" 
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       MaxWidth="200"
+                                                                       Margin="0,4,0,0"/>
+                                                        </StackPanel>
+
+                                                        <materialDesign:Chip Grid.Column="2"
+                                                                             Content="{Binding Estado}"
+                                                                             IconBackground="{Binding Estado, Converter={StaticResource StatusToColorConverter}}"
+                                                                             IconForeground="White"
+                                                                             FontSize="10">
+                                                            <materialDesign:Chip.Icon>
+                                                                <materialDesign:PackIcon Kind="Clock" />
+                                                            </materialDesign:Chip.Icon>
+                                                        </materialDesign:Chip>
+                                                    </Grid>
+                                                </materialDesign:Card>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <!-- Mensaje cuando no hay citas -->
+                                <StackPanel Visibility="{Binding TotalCitas, Converter={x:Static local:CountToVisibilityConverter.Instance}}"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,40,0,0">
+                                    <materialDesign:PackIcon Kind="Calendar" 
+                                                             Width="48" Height="48"
+                                                            Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                            HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Sin citas programadas"
+                                              Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                              Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                              HorizontalAlignment="Center"
+                                              Margin="0,12,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+
+            <!-- Barra de acciones -->
+            <materialDesign:ColorZone Grid.Row="2" 
+                                     Mode="PrimaryLight"
+                                     materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="72" Margin="32,0">
+                    <!-- Información adicional -->
+                    <StackPanel DockPanel.Dock="Left" 
+                               VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Cliente.FechaRegistro, StringFormat='Cliente registrado el {0:dd/MM/yyyy}'}"
+                                  Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                  Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                        <TextBlock Text="Última actualización hace 2 horas"
+                                  Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                  Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                    </StackPanel>
+
+                    <!-- Botones de acción -->
+                    <StackPanel Orientation="Horizontal" 
+                               DockPanel.Dock="Right"
+                               VerticalAlignment="Center">
+                        <Button
+                               Command="{Binding PrintCommand}"
+                               Style="{StaticResource MaterialDesignOutlinedButton}"
+                               Margin="0,0,12,0">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Printer" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="IMPRIMIR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                               Command="{Binding RefreshCommand}"
+                               Style="{StaticResource MaterialDesignOutlinedButton}"
+                               Margin="0,0,12,0">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Refresh" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="ACTUALIZAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                               Command="{Binding EditClienteCommand}"
+                               Style="{StaticResource MaterialDesignRaisedButton}"
+                               Margin="0,0,12,0">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Pencil" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="EDITAR CLIENTE"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button
+                               Command="{Binding CloseCommand}"
+                               Style="{StaticResource MaterialDesignOutlinedButton}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Close" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="CERRAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Indicador de carga -->
+            <Grid Grid.Row="0" 
+                 Grid.RowSpan="3" 
+                 Background="#80000000" 
+                 Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp8"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center"
+                                    Padding="32">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                    IsIndeterminate="True"
+                                    Width="32" Height="32"
+                                    Margin="0,0,16,0"/>
+                        <TextBlock Text="Cargando información del cliente..."
+                                  VerticalAlignment="Center"
+                                  Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </StackPanel>
+                </materialDesign:Card>
             </Grid>
-        </ScrollViewer>
-
-        <!-- Botones de acción -->
-        <Border Grid.Row="2" 
-                Background="#F5F5F5" 
-                BorderBrush="#E0E0E0" 
-                BorderThickness="0,1,0,0" 
-                Padding="20,15">
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Right">
-                <Button Content="✏️ Editar Cliente" 
-                        Command="{Binding EditClienteCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#FF9800" 
-                        Foreground="White" 
-                        BorderBrush="#FF9800"/>
-                <Button Content="🖨️ Imprimir" 
-                        Command="{Binding PrintCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#607D8B" 
-                        Foreground="White" 
-                        BorderBrush="#607D8B"/>
-                <Button Content="🔄 Actualizar" 
-                        Command="{Binding RefreshCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#4CAF50" 
-                        Foreground="White" 
-                        BorderBrush="#4CAF50"/>
-                <Button Content="❌ Cerrar" 
-                        Command="{Binding CloseCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#F44336" 
-                        Foreground="White" 
-                        BorderBrush="#F44336"/>
-            </StackPanel>
-        </Border>
-
-        <!-- Indicador de carga -->
-        <Grid Grid.Row="0" 
-              Grid.RowSpan="3" 
-              Background="#80000000" 
-              Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Border Background="White" 
-                    CornerRadius="10" 
-                    Padding="30" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <ProgressBar IsIndeterminate="True" 
-                                 Width="30" 
-                                 Height="30" 
-                                 Margin="0,0,15,0"/>
-                    <TextBlock Text="Cargando..." 
-                               VerticalAlignment="Center" 
-                               FontSize="16"/>
-                </StackPanel>
-            </Border>
         </Grid>
-    </Grid>
+    </materialDesign:DialogHost>
 </Window>

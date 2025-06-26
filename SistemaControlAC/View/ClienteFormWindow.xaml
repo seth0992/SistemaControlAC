@@ -3,269 +3,347 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:SistemaControlAC.View"
         mc:Ignorable="d"
-         Title="{Binding Title}" 
-        Height="650" 
-        Width="500"
+        Title="{Binding Title}" 
+        Height="750" 
+        Width="600"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
-    <Window.Resources>
-        <Style x:Key="FormLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
-            <Setter Property="Foreground" Value="#333"/>
-        </Style>
+        ResizeMode="NoResize"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FontFamily="{DynamicResource MaterialDesignFont}">
 
-        <Style x:Key="FormTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="Padding" Value="10,0"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="BorderBrush" Value="#DDD"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,0,15"/>
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="True">
-                    <Setter Property="BorderBrush" Value="#F44336"/>
-                    <Setter Property="BorderThickness" Value="2"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+    <materialDesign:DialogHost Identifier="ClienteFormDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Style x:Key="FormCheckBoxStyle" TargetType="CheckBox">
-            <Setter Property="Margin" Value="0,0,0,15"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="MinWidth" Value="100"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Encabezado -->
-        <Border Grid.Row="0" 
-                Background="#2196F3" 
-                Padding="20,15">
-            <TextBlock Text="{Binding Title}" 
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="White"/>
-        </Border>
-
-        <!-- Formulario -->
-        <ScrollViewer Grid.Row="1" 
-                      VerticalScrollBarVisibility="Auto" 
-                      Padding="30,20">
-            <StackPanel>
-                <!-- Información Personal -->
-                <TextBlock Text="INFORMACIÓN PERSONAL" 
-                           FontSize="14" 
-                           FontWeight="Bold" 
-                           Foreground="#2196F3" 
-                           Margin="0,0,0,15"/>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Nombre *" Style="{StaticResource FormLabelStyle}"/>
-                        <TextBox Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                                 Style="{StaticResource FormTextBoxStyle}"/>
+            <!-- Encabezado -->
+            <materialDesign:ColorZone Grid.Row="0" 
+                                      Mode="PrimaryMid"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="64" Margin="24,0">
+                    <StackPanel Orientation="Horizontal" 
+                                VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="AccountPlus" 
+                                                 Width="28" Height="28"
+                                                 Foreground="White"
+                                                 Margin="0,0,16,0"/>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Title}" 
+                                       FontSize="18" 
+                                       FontWeight="Medium" 
+                                       Foreground="White"/>
+                            <TextBlock Text="Complete la información del cliente" 
+                                       FontSize="13" 
+                                       Foreground="#B3E5FC"/>
+                        </StackPanel>
                     </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
 
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Apellido *" Style="{StaticResource FormLabelStyle}"/>
-                        <TextBox Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                                 Style="{StaticResource FormTextBoxStyle}"/>
-                    </StackPanel>
-                </Grid>
+            <!-- Formulario -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Auto" 
+                          Padding="32,24">
+                <StackPanel>
+                    <!-- Información Personal -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="Account" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="INFORMACIÓN PERSONAL" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
 
-                <!-- Contacto -->
-                <TextBlock Text="CONTACTO" 
-                           FontSize="14" 
-                           FontWeight="Bold" 
-                           Foreground="#2196F3" 
-                           Margin="0,10,0,15"/>
+                            <UniformGrid Columns="2" 
+                                         Margin="0,0,0,16">
+                                <TextBox materialDesign:HintAssist.Hint="Nombre"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         materialDesign:ValidationAssist.UsePopup="True"
+                                         Margin="0,0,8,0"/>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                                <TextBox materialDesign:HintAssist.Hint="Apellido"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         materialDesign:ValidationAssist.UsePopup="True"
+                                         Margin="8,0,0,0"/>
+                            </UniformGrid>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Teléfono Principal *" Style="{StaticResource FormLabelStyle}"/>
-                        <TextBox Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                                 Style="{StaticResource FormTextBoxStyle}"/>
-                    </StackPanel>
+                            <TextBox materialDesign:HintAssist.Hint="RFC (Opcional)"
+                                     materialDesign:HintAssist.IsFloating="True"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     Text="{Binding RFC, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                     CharacterCasing="Upper"
+                                     MaxLength="13"/>
+                        </StackPanel>
+                    </materialDesign:Card>
 
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Teléfono Secundario" Style="{StaticResource FormLabelStyle}"/>
-                        <TextBox Text="{Binding TelefonoSecundario, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                                 Style="{StaticResource FormTextBoxStyle}"/>
-                    </StackPanel>
-                </Grid>
+                    <!-- Información de Contacto -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="Phone" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="CONTACTO" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
 
-                <TextBlock Text="Email" Style="{StaticResource FormLabelStyle}"/>
-                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                         Style="{StaticResource FormTextBoxStyle}"/>
+                            <UniformGrid Columns="2" 
+                                         Margin="0,0,0,16">
+                                <TextBox materialDesign:HintAssist.Hint="Teléfono Principal"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         materialDesign:ValidationAssist.UsePopup="True"
+                                         Margin="0,0,8,0">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding SaveCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
 
-                <!-- Dirección -->
-                <TextBlock Text="DIRECCIÓN" 
-                           FontSize="14" 
-                           FontWeight="Bold" 
-                           Foreground="#2196F3" 
-                           Margin="0,10,0,15"/>
+                                <TextBox materialDesign:HintAssist.Hint="Teléfono Secundario (Opcional)"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Text="{Binding TelefonoSecundario, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                         Margin="8,0,0,0"/>
+                            </UniformGrid>
 
-                <TextBlock Text="Dirección *" Style="{StaticResource FormLabelStyle}"/>
-                <TextBox Text="{Binding Direccion, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                         Style="{StaticResource FormTextBoxStyle}"
-                         Height="60"
-                         TextWrapping="Wrap"
-                         AcceptsReturn="True"
-                         VerticalContentAlignment="Top"
-                         Padding="10,8"/>
+                            <TextBox materialDesign:HintAssist.Hint="Correo Electrónico (Opcional)"
+                                     materialDesign:HintAssist.IsFloating="True"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                     materialDesign:ValidationAssist.UsePopup="True"/>
+                        </StackPanel>
+                    </materialDesign:Card>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <!-- Dirección -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="MapMarker" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="DIRECCIÓN" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Ciudad" Style="{StaticResource FormLabelStyle}"/>
-                        <TextBox Text="{Binding Ciudad, UpdateSourceTrigger=PropertyChanged}" 
-                                 Style="{StaticResource FormTextBoxStyle}"/>
-                    </StackPanel>
+                            <TextBox materialDesign:HintAssist.Hint="Dirección Completa"
+                                     materialDesign:HintAssist.IsFloating="True"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     Text="{Binding Direccion, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                     materialDesign:ValidationAssist.UsePopup="True"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     Height="80"
+                                     VerticalContentAlignment="Top"
+                                     Margin="0,0,0,16"/>
 
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Código Postal" Style="{StaticResource FormLabelStyle}"/>
-                        <TextBox Text="{Binding CodigoPostal, UpdateSourceTrigger=PropertyChanged}" 
-                                 Style="{StaticResource FormTextBoxStyle}"/>
-                    </StackPanel>
-                </Grid>
+                            <UniformGrid Columns="2">
+                                <TextBox materialDesign:HintAssist.Hint="Ciudad"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Text="{Binding Ciudad, UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="0,0,8,0"/>
 
-                <!-- Información Adicional -->
-                <TextBlock Text="INFORMACIÓN ADICIONAL" 
-                           FontSize="14" 
-                           FontWeight="Bold" 
-                           Foreground="#2196F3" 
-                           Margin="0,10,0,15"/>
+                                <TextBox materialDesign:HintAssist.Hint="Código Postal"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Text="{Binding CodigoPostal, UpdateSourceTrigger=PropertyChanged}"
+                                         MaxLength="10"
+                                         Margin="8,0,0,0"/>
+                            </UniformGrid>
+                        </StackPanel>
+                    </materialDesign:Card>
 
-                <TextBlock Text="RFC" Style="{StaticResource FormLabelStyle}"/>
-                <TextBox Text="{Binding RFC, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                         Style="{StaticResource FormTextBoxStyle}"/>
+                    <!-- Preferencias -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="Settings" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="PREFERENCIAS" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
 
-                <!-- Preferencias de Notificación -->
-                <TextBlock Text="PREFERENCIAS DE NOTIFICACIÓN" 
-                           FontSize="14" 
-                           FontWeight="Bold" 
-                           Foreground="#2196F3" 
-                           Margin="0,10,0,15"/>
+                            <!-- Notificaciones -->
+                            <TextBlock Text="Notificaciones"
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                       Margin="0,0,0,16"/>
 
-                <CheckBox Content="Recibir notificaciones por Email" 
-                          IsChecked="{Binding RecibeNotificacionesEmail}" 
-                          Style="{StaticResource FormCheckBoxStyle}"/>
+                            <StackPanel Margin="16,0,0,16">
+                                <CheckBox Content="Recibir notificaciones por Email"
+                                          IsChecked="{Binding RecibeNotificacionesEmail}"
+                                          Style="{StaticResource MaterialDesignCheckBox}"
+                                          Margin="0,0,0,12">
+                                    <CheckBox.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock Text="Recibir recordatorios de citas y notificaciones por correo electrónico"/>
+                                        </ToolTip>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
 
-                <CheckBox Content="Recibir notificaciones por WhatsApp" 
-                          IsChecked="{Binding RecibeNotificacionesWhatsApp}" 
-                          Style="{StaticResource FormCheckBoxStyle}"/>
+                                <CheckBox Content="Recibir notificaciones por WhatsApp"
+                                         IsChecked="{Binding RecibeNotificacionesWhatsApp}"
+                                         Style="{StaticResource MaterialDesignCheckBox}">
+                                    <CheckBox.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock Text="Recibir recordatorios de citas y notificaciones por WhatsApp"/>
+                                        </ToolTip>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                            </StackPanel>
 
-                <!-- Estado (solo en modo edición) -->
-                <CheckBox Content="Cliente Activo" 
-                          IsChecked="{Binding Activo}" 
-                          Style="{StaticResource FormCheckBoxStyle}"
-                          Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <!-- Estado del cliente (solo en modo edición) -->
+                            <StackPanel Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="Estado del Cliente"
+                                          Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                          Margin="0,16,0,16"/>
 
-                <TextBlock Text="* Campos obligatorios" 
-                           FontSize="12" 
-                           Foreground="#666" 
-                           FontStyle="Italic" 
-                           Margin="0,10,0,0"/>
-            </StackPanel>
-        </ScrollViewer>
+                                <ToggleButton Content="Cliente Activo"
+                                             IsChecked="{Binding Activo}"
+                                             Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                             Margin="16,0,0,0">
+                                    <ToggleButton.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock Text="Desactivar un cliente lo ocultará de las listas principales"/>
+                                        </ToolTip>
+                                    </ToggleButton.ToolTip>
+                                </ToggleButton>
+                            </StackPanel>
+                        </StackPanel>
+                    </materialDesign:Card>
 
-        <!-- Botones de acción -->
-        <Border Grid.Row="2" 
-                Background="#F5F5F5" 
-                BorderBrush="#E0E0E0" 
-                BorderThickness="0,1,0,0" 
-                Padding="20,15">
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Right">
-                <Button Content="💾 Guardar" 
-                        Command="{Binding SaveCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#4CAF50" 
-                        Foreground="White" 
-                        BorderBrush="#4CAF50"/>
-                <Button Content="🧹 Limpiar" 
-                        Command="{Binding ClearCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#FF9800" 
-                        Foreground="White" 
-                        BorderBrush="#FF9800"
-                        Visibility="{Binding IsEditMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-                <Button Content="❌ Cancelar" 
-                        Command="{Binding CancelCommand}" 
-                        Style="{StaticResource ActionButtonStyle}" 
-                        Background="#F44336" 
-                        Foreground="White" 
-                        BorderBrush="#F44336"/>
-            </StackPanel>
-        </Border>
-
-        <!-- Indicador de carga -->
-        <Grid Grid.Row="0" 
-              Grid.RowSpan="3" 
-              Background="#80000000" 
-              Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Border Background="White" 
-                    CornerRadius="10" 
-                    Padding="30" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <ProgressBar IsIndeterminate="True" 
-                                 Width="30" 
-                                 Height="30" 
-                                 Margin="0,0,15,0"/>
-                    <TextBlock Text="Guardando..." 
-                               VerticalAlignment="Center" 
-                               FontSize="16"/>
+                    <!-- Nota informativa -->
+                    <materialDesign:Card Background="{DynamicResource MaterialDesignToolBarBackground}"
+                                        Margin="0,24,0,0"
+                                        materialDesign:ElevationAssist.Elevation="Dp1">
+                        <StackPanel Orientation="Horizontal" Margin="16">
+                            <materialDesign:PackIcon Kind="Information" 
+                                                    Width="20" Height="20"
+                                                    Foreground="{StaticResource PrimaryBrush}"
+                                                    Margin="0,0,12,0"/>
+                            <TextBlock Text="Los campos marcados con * son obligatorios. La información se guardará de forma segura."
+                                      Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                      Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                      TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </materialDesign:Card>
                 </StackPanel>
-            </Border>
+            </ScrollViewer>
+
+            <!-- Botones de acción -->
+            <materialDesign:ColorZone Grid.Row="2" 
+                                     Mode="PrimaryLight"
+                                     materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="72" Margin="32,0">
+                    <!-- Información de validación -->
+                    <StackPanel DockPanel.Dock="Left" 
+                               VerticalAlignment="Center"
+                               Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="CheckCircle" 
+                                                Width="16" Height="16"
+                                                Foreground="{StaticResource SuccessBrush}"
+                                                Margin="0,0,8,0"/>
+                        <TextBlock Text="Formulario válido"
+                                  Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                  Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                    </StackPanel>
+
+                    <!-- Botones -->
+                    <StackPanel Orientation="Horizontal" 
+                               DockPanel.Dock="Right"
+                               VerticalAlignment="Center">
+                        <Button 
+                               Command="{Binding ClearCommand}"
+                               Style="{StaticResource MaterialDesignOutlinedButton}"
+                               Margin="0,0,12,0"
+                               Visibility="{Binding IsEditMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Refresh" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="LIMPIAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                               Command="{Binding CancelCommand}"
+                               Style="{StaticResource MaterialDesignOutlinedButton}"
+                               Margin="0,0,12,0">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Close" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="CANCELAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                               Command="{Binding SaveCommand}"
+                               Style="{StaticResource MaterialDesignRaisedButton}"
+                               IsDefault="True">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ContentSave" 
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"/>
+                                    <TextBlock Text="GUARDAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Indicador de carga -->
+            <Grid Grid.Row="0" 
+                 Grid.RowSpan="3" 
+                 Background="#80000000" 
+                 Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp8"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center"
+                                    Padding="32">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                    IsIndeterminate="True"
+                                    Width="32" Height="32"
+                                    Margin="0,0,16,0"/>
+                        <TextBlock Text="Guardando cliente..."
+                                  VerticalAlignment="Center"
+                                  Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </StackPanel>
+                </materialDesign:Card>
+            </Grid>
         </Grid>
-    </Grid>
+    </materialDesign:DialogHost>
 </Window>
