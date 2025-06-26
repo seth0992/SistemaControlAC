@@ -5,8 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SistemaControlAC.View"
              mc:Ignorable="d" 
+             xmlns:sc="clr-namespace:WpfScheduler;assembly=WpfScheduler"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid Margin="0,0,0,0">
+            <sc:Scheduler   OnScheduleDoubleClick="scheduler1_OnScheduleDoubleClick"
+HorizontalAlignment="Stretch" Name="scheduler1" VerticalAlignment="Stretch"                     
+Mode="Month" FontFamily="Roboto" Margin="10,49,10.4,9.8" Foreground="#DDFFFFFF" FontSize="16" />
+            <!--<Button x:Name="btn_Anterior" Content="Anterior" HorizontalAlignment="Left" Margin="150,10,0,0" VerticalAlignment="Top" Width="110" Foreground="#DDF9F9F9" Click="btn_Anterior_Click"/>
+            <Button x:Name="btn_Siguiente" Content="Siguiente" HorizontalAlignment="Right" Margin="0,10,150,0" VerticalAlignment="Top" Width="110" Foreground="#DDF9F9F9" Click="btn_Siguiente_Click"/>-->
+            <Label x:Name="lbl_NombreMes" Content="Septiembre" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="20" Foreground="#FF4CAF50"/>
+        </Grid>
     </Grid>
 </UserControl>

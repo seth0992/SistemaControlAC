@@ -24,5 +24,10 @@ namespace SistemaControlAC.View
         {
             InitializeComponent();
         }
-    }
+
+        private void scheduler1_OnScheduleDoubleClick(object sender, DateTime e)
+        { 
+        
+        }
+        }
 }

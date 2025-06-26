@@ -34,4 +34,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="WpfScheduler">
+      <HintPath>..\..\..\..\Downloads\WpfScheduler.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
