@@ -13,16 +13,15 @@ namespace SistemaControlAC.Core.Entities
         public string Nombre { get; set; } = string.Empty;
         public string Apellido { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
-        public string? TelefonoSecundario { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Direccion { get; set; } = string.Empty;
         public string? Ciudad { get; set; }
         public string? CodigoPostal { get; set; }
-        public string? RFC { get; set; }
         public bool RecibeNotificacionesEmail { get; set; } = true;
         public bool RecibeNotificacionesWhatsApp { get; set; } = true;
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public bool Activo { get; set; } = true;
+        public string Notas { get; set; } = string.Empty; // Notas adicionales sobre el cliente
 
         // Relaciones
         public virtual ICollection<EquipoAireAcondicionado>? Equipos { get; set; }

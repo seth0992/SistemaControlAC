@@ -7,5 +7,9 @@
         <view:Home />
     </DataTemplate>
     
+    <!-- DataTemplate para ClienteViewModel -->
+    <DataTemplate DataType="{x:Type vm:ClienteViewModel}">
+        <view:ClienteView />
+    </DataTemplate>
     
 </ResourceDictionary>

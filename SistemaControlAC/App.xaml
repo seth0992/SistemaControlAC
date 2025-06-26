@@ -13,6 +13,15 @@
             <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+            <helpers:BooleanToColorConverter x:Key="BooleanToColorConverter"/>
+            <helpers:BooleanToStatusConverter x:Key="BooleanToStatusConverter"/>
+            <helpers:BusyToStatusConverter x:Key="BusyToStatusConverter"/>
+            <helpers:StatusToColorConverter x:Key="StatusToColorConverter"/>
+            <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+            <helpers:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <helpers:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter"/>
+            <helpers:DateTimeFormatConverter x:Key="DateTimeFormatConverter"/>
+            <helpers:CountToPluralConverter x:Key="CountToPluralConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
