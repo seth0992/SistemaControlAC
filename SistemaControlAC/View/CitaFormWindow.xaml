@@ -1,0 +1,398 @@
+﻿<Window x:Class="SistemaControlAC.View.CitaFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:SistemaControlAC.View"
+        mc:Ignorable="d"
+        Title="{Binding Title}" 
+        Height="800" 
+        Width="700"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <Window.Resources>
+        <!-- Estilo para TextBox con validación inline -->
+        <Style x:Key="ValidatedTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder x:Name="placeholder"/>
+                            <TextBlock Text="{Binding ElementName=placeholder, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"
+                                       Foreground="{StaticResource ErrorBrush}"
+                                       FontSize="12"
+                                       Margin="16,4,0,0"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource ErrorBrush}"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <materialDesign:DialogHost Identifier="CitaFormDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado -->
+            <materialDesign:ColorZone Grid.Row="0" 
+                                      Mode="PrimaryMid"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="64" Margin="24,0">
+                    <StackPanel Orientation="Horizontal" 
+                                VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CalendarPlus" 
+                                                 Width="28" Height="28"
+                                                 Foreground="White"
+                                                 Margin="0,0,16,0"/>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Title}" 
+                                       FontSize="18" 
+                                       FontWeight="Medium" 
+                                       Foreground="White"/>
+                            <TextBlock Text="Complete la información de la cita" 
+                                       FontSize="13" 
+                                       Foreground="#B3E5FC"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Formulario -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Auto" 
+                          Padding="32,24">
+                <StackPanel>
+                    <!-- Información del Cliente -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="Account" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="CLIENTE Y EQUIPO" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
+
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <ComboBox materialDesign:HintAssist.Hint="Cliente *"
+          materialDesign:HintAssist.IsFloating="True"
+          Style="{StaticResource MaterialDesignOutlinedComboBox}"
+          ItemsSource="{Binding Clientes}"
+          SelectedValue="{Binding ClienteId}"
+          SelectedValuePath="Id"
+          SelectionChanged="ClienteComboBox_SelectionChanged"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <ComboBox materialDesign:HintAssist.Hint="Equipo (Opcional)"
+                                              materialDesign:HintAssist.IsFloating="True"
+                                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                              ItemsSource="{Binding EquiposCliente}"
+                                              SelectedValue="{Binding EquipoId}"
+                                              SelectedValuePath="Id">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Marca}" FontWeight="Medium"/>
+                                                    <TextBlock Text="{Binding Modelo}" FontSize="12" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Fecha y Hora -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="Calendar" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="FECHA Y HORARIO" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
+
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <DatePicker materialDesign:HintAssist.Hint="Fecha *"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                                SelectedDate="{Binding FechaProgramada}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <materialDesign:TimePicker materialDesign:HintAssist.Hint="Hora Inicio *"
+                                                               materialDesign:HintAssist.IsFloating="True"
+                                                               Style="{StaticResource MaterialDesignOutlinedTimePicker}"
+                                                               SelectedTime="{Binding HoraInicio}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <materialDesign:TimePicker materialDesign:HintAssist.Hint="Hora Fin"
+                                                               materialDesign:HintAssist.IsFloating="True"
+                                                               Style="{StaticResource MaterialDesignOutlinedTimePicker}"
+                                                               SelectedTime="{Binding HoraFin}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Información de duración -->
+                            <Border Background="{DynamicResource MaterialDesignToolBarBackground}"
+                                    CornerRadius="4"
+                                    Padding="16,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Clock" 
+                                                             Width="16" Height="16"
+                                                             Foreground="{StaticResource PrimaryBrush}"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="Duración estimada: " 
+                                               FontSize="12"/>
+                                    <TextBlock Text="{Binding DuracionEstimada}" 
+                                               FontWeight="Medium"
+                                               FontSize="12"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Servicio y Técnico -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="Tools" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="SERVICIO Y TÉCNICO" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
+
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <ComboBox materialDesign:HintAssist.Hint="Tipo de Servicio *"
+                                              materialDesign:HintAssist.IsFloating="True"
+                                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                              ItemsSource="{Binding TiposServicio}"
+                                              SelectedItem="{Binding TipoServicio}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding CalcularDuracionCommand}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <ComboBox materialDesign:HintAssist.Hint="Técnico Asignado"
+                                              materialDesign:HintAssist.IsFloating="True"
+                                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                              ItemsSource="{Binding Tecnicos}"
+                                              SelectedValue="{Binding TecnicoAsignadoId}"
+                                              SelectedValuePath="Id">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Nombre}" FontWeight="Medium"/>
+                                                    <TextBlock Text=" " />
+                                                    <TextBlock Text="{Binding Apellido}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Detalles adicionales -->
+                    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp2" 
+                                         Margin="0,0,0,24">
+                        <StackPanel Margin="24">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <materialDesign:PackIcon Kind="NoteText" 
+                                                         Width="24" Height="24"
+                                                         Foreground="{StaticResource PrimaryBrush}"
+                                                         Margin="0,0,12,0"/>
+                                <TextBlock Text="DETALLES ADICIONALES" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </StackPanel>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="200"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBox materialDesign:HintAssist.Hint="Descripción / Observaciones"
+                                             materialDesign:HintAssist.IsFloating="True"
+                                             Style="{StaticResource ValidatedTextBoxStyle}"
+                                             Text="{Binding Descripcion, UpdateSourceTrigger=PropertyChanged}"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"
+                                             Height="100"
+                                             VerticalContentAlignment="Top"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBox materialDesign:HintAssist.Hint="Costo Estimado"
+                                             materialDesign:HintAssist.IsFloating="True"
+                                             Style="{StaticResource ValidatedTextBoxStyle}"
+                                             Text="{Binding CostoEstimado, UpdateSourceTrigger=PropertyChanged, StringFormat=C}"/>
+
+                                    <ComboBox materialDesign:HintAssist.Hint="Estado"
+                                              materialDesign:HintAssist.IsFloating="True"
+                                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                              ItemsSource="{Binding Estados}"
+                                              SelectedItem="{Binding Estado}"
+                                              Margin="0,16,0,0"
+                                              Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Botones de acción -->
+            <materialDesign:ColorZone Grid.Row="2" 
+                                      Mode="Standard"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="72" Margin="16,0" LastChildFill="False">
+                    <!-- Información de validación -->
+                    <StackPanel DockPanel.Dock="Left" 
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="CheckCircle" 
+                                                 Width="16" Height="16"
+                                                 Foreground="{StaticResource SuccessBrush}"
+                                                 Margin="0,0,8,0"/>
+                        <TextBlock Text="Complete los campos requeridos"
+                                   Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                   Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                    </StackPanel>
+
+                    <!-- Botones -->
+                    <StackPanel Orientation="Horizontal" 
+                                DockPanel.Dock="Right"
+                                VerticalAlignment="Center">
+                        <Button
+                                Command="{Binding ClearCommand}"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Margin="0,0,12,0"
+                                Visibility="{Binding IsEditMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Refresh" 
+                                                             Width="18" Height="18"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="LIMPIAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                                Command="{Binding CancelCommand}"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Margin="0,0,12,0">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Close" 
+                                                             Width="18" Height="18"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="CANCELAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                                Command="{Binding SaveCommand}"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                IsDefault="True">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ContentSave" 
+                                                             Width="18" Height="18"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="GUARDAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Indicador de carga -->
+            <Grid Grid.Row="0" 
+                  Grid.RowSpan="3" 
+                  Background="#80000000" 
+                  Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp8"
+                                     HorizontalAlignment="Center" 
+                                     VerticalAlignment="Center"
+                                     Padding="32">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     IsIndeterminate="True"
+                                     Width="32" Height="32"
+                                     Margin="0,0,16,0"/>
+                        <TextBlock Text="Guardando cita..."
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                    </StackPanel>
+                </materialDesign:Card>
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>

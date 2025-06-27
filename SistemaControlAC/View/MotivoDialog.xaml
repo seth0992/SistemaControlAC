@@ -1,0 +1,125 @@
+﻿<Window x:Class="SistemaControlAC.View.MotivoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:SistemaControlAC.View"
+        mc:Ignorable="d"
+        Title="Motivo de Cancelación" 
+        Height="350" 
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp8" 
+                         Margin="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado -->
+            <materialDesign:ColorZone Grid.Row="0" 
+                                      Mode="PrimaryMid"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="64" Margin="24,0">
+                    <StackPanel Orientation="Horizontal" 
+                                VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Cancel" 
+                                                 Width="28" Height="28"
+                                                 Foreground="White"
+                                                 Margin="0,0,16,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Cancelar Cita" 
+                                       FontSize="18" 
+                                       FontWeight="Medium" 
+                                       Foreground="White"/>
+                            <TextBlock Text="Indique el motivo de la cancelación" 
+                                       FontSize="13" 
+                                       Foreground="#B3E5FC"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <!-- Contenido -->
+            <StackPanel Grid.Row="1" 
+                        Margin="24">
+                <TextBlock Text="Por favor, proporcione el motivo de la cancelación:"
+                           Style="{StaticResource MaterialDesignBody1TextBlock}"
+                           Margin="0,0,0,16"/>
+
+                <TextBox x:Name="MotivoTextBox"
+                         materialDesign:HintAssist.Hint="Motivo de cancelación"
+                         materialDesign:HintAssist.IsFloating="True"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         Height="120"
+                         VerticalContentAlignment="Top"
+                         MaxLength="500"/>
+
+                <TextBlock Text="{Binding ElementName=MotivoTextBox, Path=Text.Length, StringFormat='Caracteres: {0}/500'}"
+                           HorizontalAlignment="Right"
+                           FontSize="11"
+                           Foreground="{DynamicResource MaterialDesignBodyLight}"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Botones -->
+            <materialDesign:ColorZone Grid.Row="2" 
+                                      Mode="Standard"
+                                      materialDesign:ElevationAssist.Elevation="Dp4">
+                <DockPanel Height="64" Margin="16,0" LastChildFill="False">
+                    <!-- Información -->
+                    <StackPanel DockPanel.Dock="Left" 
+                                VerticalAlignment="Center">
+                        <TextBlock Text="El motivo será registrado en el historial de la cita"
+                                   Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                   Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                    </StackPanel>
+
+                    <!-- Botones de acción -->
+                    <StackPanel Orientation="Horizontal" 
+                                DockPanel.Dock="Right"
+                                VerticalAlignment="Center">
+                        <Button x:Name="CancelButton"
+                                Click="CancelButton_Click"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Margin="0,0,12,0">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Close" 
+                                                             Width="18" Height="18"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="CANCELAR"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button x:Name="ConfirmButton"
+                                Click="ConfirmButton_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Background="{StaticResource ErrorBrush}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Check" 
+                                                             Width="18" Height="18"
+                                                             Margin="0,0,8,0"/>
+                                    <TextBlock Text="CONFIRMAR CANCELACIÓN"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+        </Grid>
+    </materialDesign:Card>
+</Window>

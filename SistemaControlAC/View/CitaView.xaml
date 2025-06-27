@@ -1,0 +1,514 @@
+﻿<UserControl x:Class="SistemaControlAC.View.CitaView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:SistemaControlAC.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1200"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <UserControl.Resources>
+        <Style x:Key="CenteredCellStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header con estadísticas -->
+        <materialDesign:Card Grid.Row="0" 
+                             Margin="0,0,0,16"
+                             materialDesign:ElevationAssist.Elevation="Dp2">
+            <Grid Margin="24,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Título y estadísticas -->
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <materialDesign:PackIcon Kind="Calendar" 
+                                                 Width="28" Height="28"
+                                                 Foreground="{StaticResource PrimaryBrush}"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Gestión de Citas" 
+                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                    </StackPanel>
+
+                    <!-- Estadísticas -->
+                    <UniformGrid Columns="5" Rows="1">
+                        <materialDesign:Card Background="{StaticResource PrimaryBrush}"
+                                             Margin="0,0,4,0"
+                                             Padding="16,12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="CalendarMultiple"
+                                                         Width="24" Height="24"
+                                                         Foreground="White"
+                                                         HorizontalAlignment="Center"
+                                                         Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding TotalCitas}" 
+                                           FontSize="20" 
+                                           FontWeight="Bold" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="Total" 
+                                           FontSize="12" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Background="{StaticResource AccentBrush}"
+                                             Margin="4,0,4,0"
+                                             Padding="16,12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Clock"
+                                                         Width="24" Height="24"
+                                                         Foreground="White"
+                                                         HorizontalAlignment="Center"
+                                                         Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding CitasProgramadas}" 
+                                           FontSize="20" 
+                                           FontWeight="Bold" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="Programadas" 
+                                           FontSize="12" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Background="{StaticResource WarningBrush}"
+                                             Margin="4,0,4,0"
+                                             Padding="16,12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="ProgressClock"
+                                                         Width="24" Height="24"
+                                                         Foreground="White"
+                                                         HorizontalAlignment="Center"
+                                                         Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding CitasEnProceso}" 
+                                           FontSize="20" 
+                                           FontWeight="Bold" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="En Proceso" 
+                                           FontSize="12" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Background="{StaticResource SuccessBrush}"
+                                             Margin="4,0,4,0"
+                                             Padding="16,12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="CheckCircle"
+                                                         Width="24" Height="24"
+                                                         Foreground="White"
+                                                         HorizontalAlignment="Center"
+                                                         Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding CitasCompletadas}" 
+                                           FontSize="20" 
+                                           FontWeight="Bold" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="Completadas" 
+                                           FontSize="12" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Background="{StaticResource ErrorBrush}"
+                                             Margin="4,0,0,0"
+                                             Padding="16,12">
+                            <StackPanel HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Cancel"
+                                                         Width="24" Height="24"
+                                                         Foreground="White"
+                                                         HorizontalAlignment="Center"
+                                                         Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding CitasCanceladas}" 
+                                           FontSize="20" 
+                                           FontWeight="Bold" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="Canceladas" 
+                                           FontSize="12" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </UniformGrid>
+                </StackPanel>
+
+                <!-- Acciones rápidas -->
+                <StackPanel Grid.Column="1" 
+                           VerticalAlignment="Center"
+                           Orientation="Horizontal">
+                    <Button 
+                           Command="{Binding AddCitaCommand}"
+                           Style="{StaticResource MaterialDesignRaisedButton}"
+                           Margin="0,0,8,0">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Plus" 
+                                                        Width="18" Height="18"
+                                                        Margin="0,0,8,0"/>
+                                <TextBlock Text="NUEVA CITA"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Command="{Binding RefreshCommand}"
+                           Style="{StaticResource MaterialDesignToolButton}"
+                           ToolTip="Actualizar lista">
+                        <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <!-- Barra de herramientas y filtros -->
+        <materialDesign:Card Grid.Row="1" 
+                             Margin="0,0,0,16"
+                             materialDesign:ElevationAssist.Elevation="Dp1">
+            <Grid Margin="24,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Búsqueda y filtros -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBox materialDesign:HintAssist.Hint="Buscar citas..."
+                             materialDesign:HintAssist.IsFloating="False"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Width="300"
+                             Margin="0,0,16,0">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+
+                    <ComboBox materialDesign:HintAssist.Hint="Estado"
+                              materialDesign:HintAssist.IsFloating="True"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding EstadosFiltro}"
+                              SelectedItem="{Binding EstadoFiltro}"
+                              Width="150"
+                              Margin="0,0,16,0"/>
+
+                    <DatePicker materialDesign:HintAssist.Hint="Fecha"
+                                materialDesign:HintAssist.IsFloating="True"
+                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                SelectedDate="{Binding FechaFiltro}"
+                                Width="150"
+                                Margin="0,0,16,0"/>
+
+                    <StackPanel Orientation="Vertical" Margin="0,0,16,0">
+                        <TextBlock Text="Solo hoy" 
+                                   VerticalAlignment="Center"
+                                   FontSize="12"/>
+                        <ToggleButton
+                                      IsChecked="{Binding MostrarSoloHoy}"
+                                      Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                      Margin="0,4,0,0" Width="40"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Acciones de selección -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button 
+                            Command="{Binding ViewCitaCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Margin="0,0,8,0">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Eye" 
+                                                         Width="18" Height="18"
+                                                         Margin="0,0,8,0"/>
+                                <TextBlock Text="VER"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button 
+                            Command="{Binding EditCitaCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Margin="0,0,8,0">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Pencil" 
+                                                         Width="18" Height="18"
+                                                         Margin="0,0,8,0"/>
+                                <TextBlock Text="EDITAR"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button 
+                            Command="{Binding CompletarCitaCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            BorderBrush="{StaticResource SuccessBrush}"
+                            Foreground="{StaticResource SuccessBrush}"
+                            Margin="0,0,8,0">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="CheckCircle" 
+                                                         Width="18" Height="18"
+                                                         Margin="0,0,8,0"/>
+                                <TextBlock Text="COMPLETAR"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Command="{Binding CancelarCitaCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            BorderBrush="{StaticResource ErrorBrush}"
+                            Foreground="{StaticResource ErrorBrush}"
+                            Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Cancel" 
+                                                     Width="18" Height="18"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="CANCELAR"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding DeleteCitaCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            BorderBrush="{StaticResource ErrorBrush}"
+                            Foreground="{StaticResource ErrorBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Delete" 
+                                                     Width="18" Height="18"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="ELIMINAR"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <!-- Lista de citas -->
+        <materialDesign:Card Grid.Row="2" 
+                             materialDesign:ElevationAssist.Elevation="Dp1">
+            <Grid>
+                <DataGrid ItemsSource="{Binding CitasView}" 
+                          SelectedItem="{Binding SelectedCita}"
+                          AutoGenerateColumns="False"
+                          CanUserSortColumns="True"
+                          CanUserReorderColumns="True"
+                          CanUserResizeColumns="True"
+                          SelectionMode="Single"
+                          IsReadOnly="True"
+                          materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                          materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                          Margin="16">
+
+                    <DataGrid.Columns>
+                        <!-- ID -->
+                        <DataGridTextColumn Header="ID" 
+                                            Binding="{Binding Id}" 
+                                            Width="60"
+                                            ElementStyle="{StaticResource CenteredCellStyle}"/>
+
+                        <!-- Fecha y Hora -->
+                        <DataGridTemplateColumn Header="Fecha y Hora" Width="180">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding FechaProgramada, StringFormat=dd/MM/yyyy}" 
+                                                   FontWeight="Medium"
+                                                   FontSize="14"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Clock" 
+                                                                     Width="12" Height="12"
+                                                                     Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                     Margin="0,0,4,0"/>
+                                            <TextBlock Text="{Binding HoraInicio, StringFormat=hh\\:mm}" 
+                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                       FontSize="13"/>
+                                            <TextBlock Text=" - " 
+                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                       FontSize="13"/>
+                                            <TextBlock Text="{Binding HoraFin, StringFormat=hh\\:mm}" 
+                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                       FontSize="13"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Cliente -->
+                        <DataGridTemplateColumn Header="Cliente" Width="200">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Background="{StaticResource PrimaryLightBrush}"
+                                                Width="32" Height="32"
+                                                CornerRadius="16"
+                                                Margin="0,0,12,0">
+                                            <TextBlock Text="{Binding Cliente.Nombre, StringFormat={}{0:C1}}"
+                                                       Foreground="White"
+                                                       FontSize="14"
+                                                       FontWeight="Medium"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Cliente.Nombre}" 
+                                                       FontWeight="Medium"
+                                                       FontSize="14"/>
+                                            <TextBlock Text="{Binding Cliente.Apellido}" 
+                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                       FontSize="13"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Técnico -->
+                        <DataGridTemplateColumn Header="Técnico" Width="180">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding TecnicoAsignado.Nombre}" 
+                                                   FontWeight="Medium"
+                                                   FontSize="14"/>
+                                        <TextBlock Text="{Binding TecnicoAsignado.Apellido}" 
+                                                   Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                   FontSize="13"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Tipo de Servicio -->
+                        <DataGridTemplateColumn Header="Servicio" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <materialDesign:Chip Content="{Binding TipoServicio}"
+                                                         FontSize="11"
+                                                         Background="{StaticResource PrimaryLightBrush}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Equipo -->
+                        <DataGridTemplateColumn Header="Equipo" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Equipo.Marca}" 
+                                                   FontSize="13"/>
+                                        <TextBlock Text="{Binding Equipo.Modelo}" 
+                                                   Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                   FontSize="12"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Estado -->
+                        <DataGridTemplateColumn Header="Estado" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <materialDesign:Chip Content="{Binding Estado}"
+                                                         IconBackground="{Binding Estado, Converter={StaticResource StatusToColorConverter}}"
+                                                         IconForeground="White"
+                                                         FontSize="11">
+                                        <materialDesign:Chip.Icon>
+                                            <materialDesign:PackIcon Kind="Clock" />
+                                        </materialDesign:Chip.Icon>
+                                    </materialDesign:Chip>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Costo -->
+                        <DataGridTextColumn Header="Costo Est." 
+                                            Binding="{Binding CostoEstimado, StringFormat=C}" 
+                                            Width="100"
+                                            ElementStyle="{StaticResource CenteredCellStyle}"/>
+
+                        <!-- Acciones -->
+                        <DataGridTemplateColumn Header="Acciones" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Command="{Binding DataContext.ViewCitaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                ToolTip="Ver detalles"
+                                                Margin="2">
+                                            <materialDesign:PackIcon Kind="Eye" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <Button Command="{Binding DataContext.EditCitaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                ToolTip="Editar"
+                                                Margin="2">
+                                            <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <Button Command="{Binding DataContext.CompletarCitaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                ToolTip="Completar"
+                                                Foreground="{StaticResource SuccessBrush}"
+                                                Margin="2">
+                                            <materialDesign:PackIcon Kind="CheckCircle" Width="16" Height="16"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- Mensaje cuando no hay datos -->
+                <StackPanel VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding Citas.Count, Converter={x:Static local:CountToVisibilityConverter.Instance}}">
+                    <materialDesign:PackIcon Kind="Calendar" Width="64" Height="64"
+                            Foreground="{DynamicResource MaterialDesignBodyLight}"
+                            HorizontalAlignment="Center"/>
+                    <TextBlock Text="No se encontraron citas"
+                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                               Foreground="{DynamicResource MaterialDesignBodyLight}"
+                               HorizontalAlignment="Center"
+                               Margin="0,16,0,8"/>
+                    <TextBlock Text="Utilice el botón 'Nueva Cita' para programar la primera cita"
+                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                               Foreground="{DynamicResource MaterialDesignBodyLight}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
