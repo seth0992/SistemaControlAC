@@ -10,12 +10,12 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Resources\Images\Avatar\avatar.jpg" />
     <None Remove="Resources\Logo\Logo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Fonts\" />
-    <Folder Include="Resources\Images\" />
     <Folder Include="Styles\" />
   </ItemGroup>
 
@@ -32,6 +32,9 @@
 
   <ItemGroup>
     <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\Avatar\avatar.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Logo\Logo.png">

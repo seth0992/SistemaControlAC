@@ -11,7 +11,13 @@
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
              FontFamily="{DynamicResource MaterialDesignFont}">
-
+    <UserControl.Resources>
+        <Style x:Key="CenteredCellStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>       
+    </UserControl.Resources>
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -40,48 +46,55 @@
                                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:Chip Content="{Binding ActiveClientes, StringFormat='Activos: {0}'}"
-                                             IconBackground="{StaticResource SuccessBrush}"
-                                             IconForeground="White"
-                                             Margin="0,0,8,0">
-                            <materialDesign:Chip.Icon>
-                                <materialDesign:PackIcon Kind="CheckCircle"/>
-                            </materialDesign:Chip.Icon>
-                        </materialDesign:Chip>
+                    <Grid Grid.Row="1">
+                        <DockPanel LastChildFill="False">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                <materialDesign:Chip Content="{Binding ActiveClientes, StringFormat='Activos: {0}'}"
+                              IconBackground="{StaticResource SuccessBrush}"
+                              IconForeground="White"
+                              Margin="0,0,8,0">
+                                    <materialDesign:Chip.Icon>
+                                        <materialDesign:PackIcon Kind="CheckCircle"/>
+                                    </materialDesign:Chip.Icon>
+                                </materialDesign:Chip>
 
-                        <materialDesign:Chip Content="{Binding TotalClientes, StringFormat='Total: {0}'}"
-                                             IconBackground="{StaticResource PrimaryBrush}"
-                                             IconForeground="White">
-                            <materialDesign:Chip.Icon>
-                                <materialDesign:PackIcon Kind="AccountGroup"/>
-                            </materialDesign:Chip.Icon>
-                        </materialDesign:Chip>
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Acciones rápidas -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button 
-                            Command="{Binding AddClienteCommand}"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            Margin="0,0,8,0">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Plus" 
-                                                         Width="18" Height="18"
-                                                         Margin="0,0,8,0"/>
-                                <TextBlock Text="NUEVO CLIENTE"/>
+                                <materialDesign:Chip Content="{Binding TotalClientes, StringFormat='Total: {0}'}"
+                              IconBackground="{StaticResource PrimaryBrush}"
+                              IconForeground="White">
+                                    <materialDesign:Chip.Icon>
+                                        <materialDesign:PackIcon Kind="AccountGroup"/>
+                                    </materialDesign:Chip.Icon>
+                                </materialDesign:Chip>
                             </StackPanel>
-                        </Button.Content>
-                    </Button>
 
-                    <Button Command="{Binding RefreshCommand}"
-                            Style="{StaticResource MaterialDesignToolButton}"
-                            ToolTip="Actualizar lista">
-                        <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
-                    </Button>
+                            <!-- Acciones rápidas -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" DockPanel.Dock="Right">
+                                <Button 
+                   Command="{Binding AddClienteCommand}"
+                   Style="{StaticResource MaterialDesignRaisedButton}"
+                   Margin="0,0,8,0">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Plus" 
+                                                Width="18" Height="18"
+                                                Margin="0,0,8,0"/>
+                                            <TextBlock Text="NUEVO CLIENTE"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button Command="{Binding RefreshCommand}"
+                   Style="{StaticResource MaterialDesignToolButton}"
+                   ToolTip="Actualizar lista">
+                                    <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+               
+                    </Grid>
                 </StackPanel>
+
+         
             </Grid>
         </materialDesign:Card>
 
@@ -119,10 +132,15 @@
                         </StackPanel>
                     </Button>
 
-                    <ToggleButton Content="Mostrar inactivos"
+                    <StackPanel Orientation="Vertical" Margin="0,0,16,0">
+                        <TextBlock Text="Mostrar inactivos " 
+                                   VerticalAlignment="Center"
+                                   />
+                        <ToggleButton
                                   IsChecked="{Binding ShowInactive}"
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                                  Margin="16,0,0,0"/>
+                                  Margin="0,8,0,0" Width="40"/>
+                    </StackPanel>
                 </StackPanel>
 
                 <!-- Acciones de selección -->
@@ -190,7 +208,10 @@
                         <!-- ID -->
                         <DataGridTextColumn Header="ID" 
                                             Binding="{Binding Id}" 
-                                            Width="80"/>
+                                            Width="80"
+                                            ElementStyle="{StaticResource CenteredCellStyle}"
+                                           />                            
+
 
                         <!-- Avatar y Nombre -->
                         <DataGridTemplateColumn Header="Cliente" Width="250">
@@ -269,7 +290,7 @@
                                             Width="120"/>
 
                         <!-- Estado -->
-                        <DataGridTemplateColumn Header="Estado" Width="100">
+                        <DataGridTemplateColumn Header="Estado" Width="200">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <materialDesign:Chip Content="{Binding Activo, Converter={StaticResource BooleanToStatusConverter}}"
@@ -346,7 +367,7 @@
         </materialDesign:Card>
 
         <!-- Indicador de carga -->
-        <Grid Grid.Row="0" 
+        <!--<Grid Grid.Row="0" 
               Grid.RowSpan="3" 
               Background="#80000000" 
               Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -364,6 +385,6 @@
                                Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                 </StackPanel>
             </materialDesign:Card>
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

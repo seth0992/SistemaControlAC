@@ -40,13 +40,14 @@
                             Width="80" Height="80"
                             CornerRadius="40"
                             VerticalAlignment="Center"
-                            Margin="0,0,24,0">
-                        <TextBlock Text="{Binding Cliente.Nombre}"
-                                   Foreground="{StaticResource PrimaryBrush}"
-                                   FontSize="32"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
+                            Margin="0,0,24,0" 
+                            ClipToBounds="True">
+                        <Ellipse Width="80" Height="80">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/Resources/Images/Avatar/avatar.jpg" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        
                     </Border>
 
                     <!-- Información principal -->
@@ -491,9 +492,9 @@
 
             <!-- Barra de acciones -->
             <materialDesign:ColorZone Grid.Row="2" 
-                                     Mode="PrimaryLight"
+                                     Mode="Standard"
                                      materialDesign:ElevationAssist.Elevation="Dp4">
-                <DockPanel Height="72" Margin="32,0">
+                <DockPanel Height="72" Margin="32,0" LastChildFill="False">
                     <!-- Información adicional -->
                     <StackPanel DockPanel.Dock="Left" 
                                VerticalAlignment="Center">
@@ -509,7 +510,7 @@
                     <StackPanel Orientation="Horizontal" 
                                DockPanel.Dock="Right"
                                VerticalAlignment="Center">
-                        <Button
+                        <!--<Button
                                Command="{Binding PrintCommand}"
                                Style="{StaticResource MaterialDesignOutlinedButton}"
                                Margin="0,0,12,0">
@@ -521,7 +522,7 @@
                                     <TextBlock Text="IMPRIMIR"/>
                                 </StackPanel>
                             </Button.Content>
-                        </Button>
+                        </Button>-->
 
                         <Button 
                                Command="{Binding RefreshCommand}"
