@@ -97,9 +97,9 @@ namespace SistemaControlAC.Data.Context
                     .WithMany(c => c.Citas)
                     .HasForeignKey(e => e.ClienteId);
 
-                entity.HasOne(e => e.Equipo)
-                    .WithMany(eq => eq.Citas)
-                    .HasForeignKey(e => e.EquipoId);
+                //entity.HasOne(e => e.Equipo)
+                //    //.WithMany(eq => eq.Citas)
+                //    .HasForeignKey(e => e.EquipoId);
 
                 entity.HasOne(e => e.TecnicoAsignado)
                     .WithMany(u => u.CitasAsignadas)

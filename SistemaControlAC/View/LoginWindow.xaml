@@ -1,4 +1,4 @@
-﻿<Window x:Class="SistemaControlAC.View.LoginWindow"
+﻿ <Window x:Class="SistemaControlAC.View.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:SistemaControlAC.View"
         mc:Ignorable="d"
         Title="{Binding Title}" 
-        Height="750" 
+        Height="630" 
         Width="500"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -69,32 +69,23 @@
                     <!-- Logo y título centrados -->
                     <StackPanel VerticalAlignment="Center" 
                                 HorizontalAlignment="Center">
-                        <Ellipse Width="80" Height="80" 
-                                 Fill="White" 
+                        
+                        <Ellipse Width="80" Height="80"                                  
                                  Margin="0,0,0,16">
                             <Ellipse.Effect>
                                 <DropShadowEffect Color="Black" 
                                                   Opacity="0.3" 
                                                   ShadowDepth="2" 
                                                   BlurRadius="8"/>
+                                
                             </Ellipse.Effect>
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/Resources/Logo/LogoApp.png" />
+                            </Ellipse.Fill>
                         </Ellipse>
 
-                        <StackPanel Orientation="Horizontal" 
-                                    HorizontalAlignment="Center"
-                                    Margin="0,-60,0,0">
-                            <materialDesign:PackIcon Kind="AirConditioner" 
-                                                     Width="32" Height="32"
-                                                     Foreground="{StaticResource PrimaryBrush}"/>
-                            <TextBlock Text="AC" 
-                                       FontSize="24" 
-                                       FontWeight="Bold"
-                                       Foreground="{StaticResource PrimaryBrush}"
-                                       VerticalAlignment="Center"
-                                       Margin="8,0,0,0"/>
-                        </StackPanel>
-
-                        <TextBlock Text="Sistema Control AC"
+             
+                        <TextBlock Text="AIRHUB"
                                    FontSize="20"
                                    FontWeight="Medium"
                                    Foreground="White"

@@ -12,6 +12,7 @@
     <None Remove="appsettings.json" />
     <None Remove="Resources\Images\Avatar\avatar.jpg" />
     <None Remove="Resources\Logo\Logo.png" />
+    <None Remove="Resources\Logo\LogoApp.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +39,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Logo\Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Logo\LogoApp.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

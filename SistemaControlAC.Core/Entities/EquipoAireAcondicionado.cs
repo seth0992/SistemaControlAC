@@ -17,12 +17,11 @@ namespace SistemaControlAC.Core.Entities
         public string? Capacidad { get; set; } // BTU o Toneladas
         public DateTime? FechaInstalacion { get; set; }
         public string Ubicacion { get; set; } = string.Empty; // Habitación, oficina, etc.
-        public string? Observaciones { get; set; }
         public bool Activo { get; set; } = true;
 
         // Relaciones
         public virtual Cliente? Cliente { get; set; }
-        public virtual ICollection<Cita>? Citas { get; set; }
-        public virtual ICollection<NotaReparacion>? NotasReparacion { get; set; }
+        //public virtual ICollection<Cita>? Citas { get; set; }
+        //public virtual ICollection<NotaReparacion>? NotasReparacion { get; set; }
     }
 }
