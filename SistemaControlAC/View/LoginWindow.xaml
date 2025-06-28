@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:SistemaControlAC.View"
         mc:Ignorable="d"
         Title="{Binding Title}" 
-        Height="650" 
+        Height="750" 
         Width="500"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -157,7 +157,13 @@
                               IsChecked="{Binding RememberMe}"
                               Style="{StaticResource MaterialDesignCheckBox}"
                               Margin="0,0,0,24"/>
-
+                    <Button Content="Limpiar credenciales guardadas"
+        Style="{StaticResource MaterialDesignFlatButton}"
+        Foreground="{StaticResource PrimaryHueMidBrush}"
+        HorizontalAlignment="Left"
+        Margin="0,8,0,0"
+        Visibility="{Binding RememberMe, Converter={StaticResource BooleanToVisibilityConverter}}"
+        Command="{Binding ClearCredentialsCommand}"/>
                     <!-- Mensaje de error -->
                     <Border x:Name="ErrorMessageBorder"
                             Background="{StaticResource ErrorBrush}"
@@ -203,15 +209,27 @@
                                    VerticalAlignment="Center"
                                    Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                     </StackPanel>
-
-                    <!-- Enlaces adicionales -->
+                    <!-- Indicador de carga de credenciales -->
+                    <StackPanel Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Visibility="{Binding IsLoadingCredentials, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Margin="0,8,0,0">
+                        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                 IsIndeterminate="True"
+                 Width="16" Height="16"
+                 Margin="0,0,8,0"/>
+                        <TextBlock Text="Cargando credenciales guardadas..."
+               VerticalAlignment="Center"
+               Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
+                    </StackPanel>
+                    <!-- Enlaces adicionales --><!--
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0,24,0,0">
                         <Button Content="¿Olvidó su contraseña?"
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Foreground="{StaticResource PrimaryHueMidBrush}"/>
-                    </StackPanel>
+                    </StackPanel>-->
                 </StackPanel>
             </ScrollViewer>
         </Grid>

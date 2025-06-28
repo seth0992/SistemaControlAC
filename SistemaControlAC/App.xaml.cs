@@ -58,10 +58,14 @@ namespace SistemaControlAC
             // Servicios de Dominio
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<ICredentialService, CredentialService>(); // Nuevo servicio
             services.AddScoped<IClienteService, ClienteService>();
 
             // ViewModels
-            services.AddTransient<LoginViewModel>();
+            services.AddTransient<LoginViewModel>(provider => new LoginViewModel(
+                provider.GetRequiredService<IAuthenticationService>(),
+                provider.GetRequiredService<ISessionService>(),
+                provider.GetRequiredService<ICredentialService>()));
             services.AddTransient<HomeViewModel>();
             services.AddTransient<ClienteViewModel>();
             services.AddTransient<ClienteFormViewModel>();

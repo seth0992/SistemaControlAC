@@ -62,7 +62,7 @@
                                                  Width="32" Height="32"
                                                  Foreground="White"
                                                  Margin="0,0,12,0"/>
-                        <TextBlock Text="Sistema Control AC"
+                        <TextBlock Text="AIRHUB - Sistema de Control de Citas"
                                    FontSize="20"
                                    FontWeight="Medium"
                                    Foreground="White"
@@ -241,7 +241,7 @@
                                     Padding="16"
                                     CornerRadius="8">
                                 <StackPanel>
-                                    <TextBlock Text="Sistema Control Citas"
+                                    <TextBlock Text="AIRHUB"
                                                FontWeight="Medium"
                                                FontSize="14"
                                                Margin="0,0,0,4"/>
@@ -272,7 +272,7 @@
                                       Mode="PrimaryLight"
                                       materialDesign:ElevationAssist.Elevation="Dp1">
                 <DockPanel Height="32" Margin="16,0">
-                    <TextBlock Text="Sistema Control AC v1.0"
+                    <TextBlock Text="AIRHUB - Sistema de Control de Citas v1.0"
                                DockPanel.Dock="Left"
                                Foreground="{DynamicResource MaterialDesignBody}"
                                FontSize="12"

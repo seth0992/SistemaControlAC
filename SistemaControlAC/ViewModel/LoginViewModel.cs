@@ -1,9 +1,6 @@
 ﻿using SistemaControlAC.Core.Interfaces;
 using SistemaControlAC.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -14,11 +11,14 @@ namespace SistemaControlAC.ViewModel
     {
         private readonly IAuthenticationService _authService;
         private readonly ISessionService _sessionService;
+        private readonly ICredentialService _credentialService;
+      
 
         private string _username = string.Empty;
         private string _password = string.Empty;
         private string _errorMessage = string.Empty;
-        private bool _rememberMe;
+        private bool _rememberMe = false;
+        private bool _isLoadingCredentials = false;
 
         public string Username
         {
@@ -41,22 +41,82 @@ namespace SistemaControlAC.ViewModel
         public bool RememberMe
         {
             get => _rememberMe;
-            set => SetProperty(ref _rememberMe, value);
+            set
+            {
+                if (SetProperty(ref _rememberMe, value))
+                {
+                    // Si se desmarca RememberMe, limpiar credenciales guardadas
+                    if (!value && !_isLoadingCredentials)
+                    {
+                        _ = _credentialService.ClearCredentialsAsync();
+                    }
+                }
+            }
+        }
+
+        public bool IsLoadingCredentials
+        {
+            get => _isLoadingCredentials;
+            set => SetProperty(ref _isLoadingCredentials, value);
         }
 
         // Comandos
         public ICommand LoginCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand ClearCredentialsCommand { get; }
 
-        public LoginViewModel(IAuthenticationService authService, ISessionService sessionService)
+        public LoginViewModel(IAuthenticationService authService, ISessionService sessionService, ICredentialService credentialService)
         {
             _authService = authService;
             _sessionService = sessionService;
+            _credentialService = credentialService;
             Title = "Iniciar Sesión - Sistema Control AC";
 
             // Inicializar comandos
             LoginCommand = new RelayCommand(async (param) => await LoginAsync());
             CancelCommand = new RelayCommand((param) => Cancel());
+            ClearCredentialsCommand = new RelayCommand(async (param) => await ClearCredentialsAsync());
+
+            // Cargar credenciales guardadas al inicializar
+            _ = LoadSavedCredentialsAsync();
+        }
+        private async Task ClearCredentialsAsync()
+        {
+            try
+            {
+                await _credentialService.ClearCredentialsAsync();
+                Username = string.Empty;
+                Password = string.Empty;
+                RememberMe = false;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error al limpiar credenciales: {ex.Message}";
+            }
+        }
+        private async Task LoadSavedCredentialsAsync()
+        {
+            try
+            {
+                IsLoadingCredentials = true;
+
+                var savedCredentials = await _credentialService.GetSavedCredentialsAsync();
+                if (savedCredentials.HasValue)
+                {
+                    Username = savedCredentials.Value.Username;
+                    Password = savedCredentials.Value.Password;
+                    RememberMe = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al cargar credenciales: {ex.Message}");
+                // No mostrar error al usuario, simplemente no cargar credenciales
+            }
+            finally
+            {
+                IsLoadingCredentials = false;
+            }
         }
 
         private async Task LoginAsync()
@@ -83,6 +143,32 @@ namespace SistemaControlAC.ViewModel
 
                 if (result.Success)
                 {
+                    // Guardar credenciales si RememberMe está marcado
+                    if (RememberMe)
+                    {
+                        try
+                        {
+                            await _credentialService.SaveCredentialsAsync(Username, Password);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Error al guardar credenciales: {ex.Message}");
+                            // No interrumpir el login por error al guardar credenciales
+                        }
+                    }
+                    else
+                    {
+                        // Limpiar credenciales si RememberMe no está marcado
+                        try
+                        {
+                            await _credentialService.ClearCredentialsAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Error al limpiar credenciales: {ex.Message}");
+                        }
+                    }
+
                     // Actualizar SessionService
                     if (result.Usuario != null)
                     {
@@ -118,7 +204,11 @@ namespace SistemaControlAC.ViewModel
             finally
             {
                 IsBusy = false;
-                Password = string.Empty; // Limpiar contraseña por seguridad
+                // Limpiar contraseña por seguridad solo si no se está recordando
+                if (!RememberMe)
+                {
+                    Password = string.Empty;
+                }
             }
         }
 
