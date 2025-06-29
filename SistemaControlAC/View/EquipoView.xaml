@@ -1,0 +1,361 @@
+﻿<UserControl x:Class="SistemaControlAC.View.EquipoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:SistemaControlAC.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.Resources>
+        <Style x:Key="CenteredCellStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header con estadísticas -->
+        <materialDesign:Card Grid.Row="0" 
+                             Margin="0,0,0,16"
+                             materialDesign:ElevationAssist.Elevation="Dp2">
+            <Grid Margin="24,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Título y estadísticas -->
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <materialDesign:PackIcon Kind="AirConditioner" 
+                                                 Width="28" Height="28"
+                                                 Foreground="{StaticResource PrimaryBrush}"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Gestión de Equipos" 
+                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1">
+                        <DockPanel LastChildFill="False">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                <materialDesign:Chip Content="{Binding ActiveEquipos, StringFormat='Activos: {0}'}"
+                              IconBackground="{StaticResource SuccessBrush}"
+                              IconForeground="White"
+                              Margin="0,0,8,0">
+                                    <materialDesign:Chip.Icon>
+                                        <materialDesign:PackIcon Kind="CheckCircle"/>
+                                    </materialDesign:Chip.Icon>
+                                </materialDesign:Chip>
+
+                                <materialDesign:Chip Content="{Binding TotalEquipos, StringFormat='Total: {0}'}"
+                              IconBackground="{StaticResource PrimaryBrush}"
+                              IconForeground="White">
+                                    <materialDesign:Chip.Icon>
+                                        <materialDesign:PackIcon Kind="AirConditioner"/>
+                                    </materialDesign:Chip.Icon>
+                                </materialDesign:Chip>
+                            </StackPanel>
+
+                            <!-- Acciones rápidas -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" DockPanel.Dock="Right">
+                                <Button 
+                   Command="{Binding AddEquipoCommand}"
+                   Style="{StaticResource MaterialDesignRaisedButton}"
+                   Margin="0,0,8,0">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Plus" 
+                                                Width="18" Height="18"
+                                                Margin="0,0,8,0"/>
+                                            <TextBlock Text="NUEVO EQUIPO"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button Command="{Binding RefreshCommand}"
+                   Style="{StaticResource MaterialDesignToolButton}"
+                   ToolTip="Actualizar lista">
+                                    <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+
+                    </Grid>
+                </StackPanel>
+
+
+            </Grid>
+        </materialDesign:Card>
+
+        <!-- Barra de herramientas y filtros -->
+        <materialDesign:Card Grid.Row="1" 
+                             Margin="0,0,0,16"
+                             materialDesign:ElevationAssist.Elevation="Dp1">
+            <Grid Margin="24,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Búsqueda y filtros -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBox materialDesign:HintAssist.Hint="Buscar equipos..."
+                             materialDesign:HintAssist.IsFloating="False"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Width="300"
+                             Margin="0,0,16,0">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+
+                    <Button Command="{Binding SearchCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Margin="0,0,16,0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Magnify" 
+                                                     Width="18" Height="18"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="BUSCAR"/>
+                        </StackPanel>
+                    </Button>
+
+                    <StackPanel Orientation="Vertical" Margin="0,0,16,0">
+                        <TextBlock Text="Mostrar inactivos " 
+                                   VerticalAlignment="Center"
+                                   />
+                        <ToggleButton
+                                  IsChecked="{Binding ShowInactive}"
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  Margin="0,8,0,0" Width="40"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Acciones de selección -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button 
+                            Command="{Binding ViewEquipoCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Margin="0,0,8,0">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Eye" 
+                                                         Width="18" Height="18"
+                                                         Margin="0,0,8,0"/>
+                                <TextBlock Text="VER DETALLES"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button 
+                            Command="{Binding EditEquipoCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Margin="0,0,8,0">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Pencil" 
+                                                         Width="18" Height="18"
+                                                         Margin="0,0,8,0"/>
+                                <TextBlock Text="EDITAR"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Command="{Binding DeleteEquipoCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            BorderBrush="{StaticResource ErrorBrush}"
+                            Foreground="{StaticResource ErrorBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Delete" 
+                                                     Width="18" Height="18"
+                                                     Margin="0,0,8,0"/>
+                            <TextBlock Text="ELIMINAR"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <!-- Lista de equipos -->
+        <materialDesign:Card Grid.Row="2" 
+                             materialDesign:ElevationAssist.Elevation="Dp1">
+            <Grid>
+                <DataGrid ItemsSource="{Binding EquiposView}" 
+                          SelectedItem="{Binding SelectedEquipo}"
+                          AutoGenerateColumns="False"
+                          CanUserSortColumns="True"
+                          CanUserReorderColumns="True"
+                          CanUserResizeColumns="True"
+                          SelectionMode="Single"
+                          IsReadOnly="True"
+                          materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                          materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                          Margin="16">
+
+                    <DataGrid.Columns>
+                        <!-- ID -->
+                        <DataGridTextColumn Header="ID" 
+                                            Binding="{Binding Id}" 
+                                            Width="80"
+                                            ElementStyle="{StaticResource CenteredCellStyle}"
+                                           />
+
+                        <!-- Cliente -->
+                        <DataGridTemplateColumn Header="Cliente" Width="200">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Cliente.Nombre}" 
+                                                   FontWeight="Medium"
+                                                   FontSize="14"/>
+                                        <TextBlock Text="{Binding Cliente.Apellido}" 
+                                                   Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                   FontSize="13"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Equipo -->
+                        <DataGridTemplateColumn Header="Equipo" Width="200">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="AirConditioner" 
+                                                                 Width="24" Height="24"
+                                                                 Foreground="{StaticResource AccentBrush}"
+                                                                 Margin="0,0,12,0"/>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Marca}" 
+                                                       FontWeight="Medium"
+                                                       FontSize="14"/>
+                                            <TextBlock Text="{Binding Modelo}" 
+                                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                       FontSize="13"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Tipo -->
+                        <DataGridTextColumn Header="Tipo" 
+                                            Binding="{Binding Tipo}" 
+                                            Width="120"/>
+
+                        <!-- Ubicación -->
+                        <DataGridTemplateColumn Header="Ubicación" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="MapMarker" 
+                                                                 Width="14" Height="14"
+                                                                 Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                                                 Margin="0,0,6,0"/>
+                                        <TextBlock Text="{Binding Ubicacion}" FontSize="13"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Capacidad -->
+                        <DataGridTextColumn Header="Capacidad" 
+                                            Binding="{Binding Capacidad}" 
+                                            Width="100"
+                                            ElementStyle="{StaticResource CenteredCellStyle}"/>
+
+                        <!-- Número de Serie -->
+                        <DataGridTextColumn Header="N° Serie" 
+                                            Binding="{Binding NumeroSerie}" 
+                                            Width="120"/>
+
+                        <!-- Estado -->
+                        <DataGridTemplateColumn Header="Estado" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <materialDesign:Chip Content="{Binding Activo, Converter={StaticResource BooleanToStatusConverter}}"
+                                                         IconBackground="{Binding Activo, Converter={StaticResource BooleanToColorConverter}}"
+                                                         IconForeground="White"
+                                                         FontSize="11">
+                                        <materialDesign:Chip.Icon>
+                                            <materialDesign:PackIcon Kind="CheckCircle" />
+                                        </materialDesign:Chip.Icon>
+                                    </materialDesign:Chip>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Acciones -->
+                        <DataGridTemplateColumn Header="Acciones" Width="150">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Command="{Binding DataContext.ViewEquipoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                ToolTip="Ver detalles"
+                                                Margin="2">
+                                            <materialDesign:PackIcon Kind="Eye" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <Button Command="{Binding DataContext.EditEquipoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                ToolTip="Editar"
+                                                Margin="2">
+                                            <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <Button Command="{Binding DataContext.DeleteEquipoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Style="{StaticResource MaterialDesignToolButton}"
+                                                ToolTip="Eliminar"
+                                                Foreground="{StaticResource ErrorBrush}"
+                                                Margin="2">
+                                            <materialDesign:PackIcon Kind="Delete" Width="16" Height="16"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- Mensaje cuando no hay datos -->
+                <StackPanel VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding Equipos.Count, Converter={x:Static local:CountToVisibilityConverter.Instance}}">
+                    <materialDesign:PackIcon Kind="AirConditioner" 
+                                             Width="64" Height="64"
+                                             Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                             HorizontalAlignment="Center"/>
+                    <TextBlock Text="No se encontraron equipos"
+                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                               Foreground="{DynamicResource MaterialDesignBodyLight}"
+                               HorizontalAlignment="Center"
+                               Margin="0,16,0,8"/>
+                    <TextBlock Text="Utilice el botón 'Nuevo Equipo' para agregar el primer equipo"
+                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                               Foreground="{DynamicResource MaterialDesignBodyLight}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

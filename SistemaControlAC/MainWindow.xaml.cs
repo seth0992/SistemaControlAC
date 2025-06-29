@@ -93,9 +93,20 @@ namespace SistemaControlAC
 
         private void NavigateToEquipos()
         {
-            // TODO: Implementar navegación a equipos
-            MessageBox.Show("Funcionalidad de Equipos en desarrollo", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
-            UpdateStatusBar("Equipos");
+
+            var app = (App)Application.Current;
+            var equipoService = app.Services.GetService(typeof(IEquipoService)) as IEquipoService;
+
+            if (equipoService == null)
+            {
+                MessageBox.Show("Error: No se pudo cargar el servicio de equipos.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var equipoViewModel = new EquipoViewModel(equipoService, _sessionService!);
+            var equipoView = new EquipoView { DataContext = equipoViewModel };
+            ContentArea.Content = equipoView;
+            UpdateStatusBar("Gestión de Equipos");
         }
 
         private void NavigateToCitas()

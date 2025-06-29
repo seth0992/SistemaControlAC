@@ -25,7 +25,7 @@ namespace SistemaControlAC.Data.Repositories
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<EquipoAireAcondicionado?> GetWithRelationsAsync(int id)
+        public async Task<EquipoAireAcondicionado?> GetWithClienteAsync(int id)
         {
             return await _context.Equipos
                 .Include(e => e.Cliente)
@@ -35,16 +35,16 @@ namespace SistemaControlAC.Data.Repositories
         public async Task<List<EquipoAireAcondicionado>> GetAllAsync()
         {
             return await _context.Equipos
-                .OrderBy(e => e.Cliente.Nombre)
+                .OrderBy(e => e.Cliente!.Nombre)
                 .ThenBy(e => e.Ubicacion)
                 .ToListAsync();
         }
 
-        public async Task<List<EquipoAireAcondicionado>> GetWithRelationsAsync()
+        public async Task<List<EquipoAireAcondicionado>> GetWithClienteAsync()
         {
             return await _context.Equipos
                 .Include(e => e.Cliente)
-                .OrderBy(e => e.Cliente.Nombre)
+                .OrderBy(e => e.Cliente!.Nombre)
                 .ThenBy(e => e.Ubicacion)
                 .ToListAsync();
         }
@@ -54,7 +54,7 @@ namespace SistemaControlAC.Data.Repositories
             return await _context.Equipos
                 .Include(e => e.Cliente)
                 .Where(e => e.Activo)
-                .OrderBy(e => e.Cliente.Nombre)
+                .OrderBy(e => e.Cliente!.Nombre)
                 .ThenBy(e => e.Ubicacion)
                 .ToListAsync();
         }
@@ -62,7 +62,6 @@ namespace SistemaControlAC.Data.Repositories
         public async Task<List<EquipoAireAcondicionado>> GetByClienteAsync(int clienteId)
         {
             return await _context.Equipos
-                .Include(e => e.Cliente)
                 .Where(e => e.ClienteId == clienteId)
                 .OrderBy(e => e.Ubicacion)
                 .ToListAsync();
@@ -161,11 +160,12 @@ namespace SistemaControlAC.Data.Repositories
                     (e.Marca.ToLower().Contains(term) ||
                      e.Modelo.ToLower().Contains(term) ||
                      (e.NumeroSerie != null && e.NumeroSerie.ToLower().Contains(term)) ||
-                     e.Tipo.ToLower().Contains(term) ||
                      e.Ubicacion.ToLower().Contains(term) ||
-                     e.Cliente.Nombre.ToLower().Contains(term) ||
-                     e.Cliente.Apellido.ToLower().Contains(term)))
-                .OrderBy(e => e.Cliente.Nombre)
+                     e.Tipo.ToLower().Contains(term) ||
+                     (e.Cliente != null &&
+                      (e.Cliente.Nombre.ToLower().Contains(term) ||
+                       e.Cliente.Apellido.ToLower().Contains(term)))))
+                .OrderBy(e => e.Cliente!.Nombre)
                 .ThenBy(e => e.Ubicacion)
                 .ToListAsync();
         }

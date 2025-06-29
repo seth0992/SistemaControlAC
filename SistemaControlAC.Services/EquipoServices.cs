@@ -123,12 +123,12 @@ namespace SistemaControlAC.Services
 
         public async Task<EquipoAireAcondicionado?> GetByIdAsync(int id)
         {
-            return await _equipoRepository.GetByIdAsync(id);
+            return await _equipoRepository.GetWithClienteAsync(id);
         }
 
         public async Task<List<EquipoAireAcondicionado>> GetAllAsync()
         {
-            return await _equipoRepository.GetAllAsync();
+            return await _equipoRepository.GetWithClienteAsync();
         }
 
         public async Task<List<EquipoAireAcondicionado>> GetActiveAsync()
@@ -146,14 +146,14 @@ namespace SistemaControlAC.Services
             return await _equipoRepository.SearchAsync(searchTerm);
         }
 
-        public async Task<EquipoAireAcondicionado?> GetWithRelationsAsync(int id)
+        public async Task<EquipoAireAcondicionado?> GetWithClienteAsync(int id)
         {
-            return await _equipoRepository.GetWithRelationsAsync(id);
+            return await _equipoRepository.GetWithClienteAsync(id);
         }
 
-        public async Task<List<EquipoAireAcondicionado>> GetWithRelationsAsync()
+        public async Task<List<EquipoAireAcondicionado>> GetWithClienteAsync()
         {
-            return await _equipoRepository.GetWithRelationsAsync();
+            return await _equipoRepository.GetWithClienteAsync();
         }
 
         public async Task<bool> ValidateEquipoAsync(EquipoAireAcondicionado equipo, bool isUpdate = false)
@@ -177,7 +177,7 @@ namespace SistemaControlAC.Services
             if (string.IsNullOrWhiteSpace(equipo.Ubicacion))
                 return false;
 
-            // Validar longitudes según el esquema de BD
+            // Validar longitudes
             if (equipo.Marca.Length > 50 || equipo.Modelo.Length > 50)
                 return false;
 
@@ -193,13 +193,9 @@ namespace SistemaControlAC.Services
             if (equipo.Ubicacion.Length > 100)
                 return false;
 
-            // Validar tipos de equipo válidos
+            // Validar tipos válidos
             var tiposValidos = await GetTiposEquipoAsync();
             if (!tiposValidos.Contains(equipo.Tipo))
-                return false;
-
-            // Validar fecha de instalación
-            if (equipo.FechaInstalacion.HasValue && equipo.FechaInstalacion.Value > DateTime.Now)
                 return false;
 
             return true;
@@ -236,29 +232,32 @@ namespace SistemaControlAC.Services
                 "Ventana",
                 "Portatil",
                 "Cassette",
-                "Piso-Techo",
-                "Conductos"
+                "Piso Techo",
+                "Mini Split"
             };
         }
 
-        public async Task<List<string>> GetMarcasPopularesAsync()
+        public async Task<List<string>> GetMarcasAsync()
         {
             await Task.CompletedTask;
             return new List<string>
             {
-                "Samsung",
                 "LG",
-                "Panasonic",
-                "Daikin",
+                "Samsung",
                 "Carrier",
-                "Trane",
+                "Daikin",
                 "Mitsubishi",
                 "York",
-                "Lennox",
-                "Rheem",
+                "Trane",
                 "Goodman",
-                "American Standard"
-            };
+                "Rheem",
+                "Lennox",
+                "Friedrich",
+                "Haier",
+                "Gree",
+                "Hisense",
+                "Otra"
+            }.OrderBy(x => x).ToList();
         }
 
         #region Métodos Privados
@@ -269,22 +268,22 @@ namespace SistemaControlAC.Services
             equipo.Marca = NormalizeText(equipo.Marca);
             equipo.Modelo = NormalizeText(equipo.Modelo);
 
-            // Normalizar tipo
-            equipo.Tipo = NormalizeText(equipo.Tipo);
-
-            // Normalizar ubicación
-            equipo.Ubicacion = NormalizeText(equipo.Ubicacion);
-
             // Normalizar número de serie
             if (!string.IsNullOrWhiteSpace(equipo.NumeroSerie))
             {
                 equipo.NumeroSerie = equipo.NumeroSerie.Trim().ToUpper();
             }
 
+            // Normalizar tipo
+            equipo.Tipo = NormalizeText(equipo.Tipo);
+
+            // Normalizar ubicación
+            equipo.Ubicacion = NormalizeText(equipo.Ubicacion);
+
             // Normalizar capacidad
             if (!string.IsNullOrWhiteSpace(equipo.Capacidad))
             {
-                equipo.Capacidad = equipo.Capacidad.Trim();
+                equipo.Capacidad = equipo.Capacidad.Trim().ToUpper();
             }
         }
 

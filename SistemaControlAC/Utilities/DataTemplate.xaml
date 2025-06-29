@@ -11,5 +11,10 @@
     <DataTemplate DataType="{x:Type vm:ClienteViewModel}">
         <view:ClienteView />
     </DataTemplate>
-    
+
+    <!-- DataTemplate para EquipoViewModel -->
+    <DataTemplate DataType="{x:Type vm:EquipoViewModel}">
+        <view:EquipoView />
+    </DataTemplate>
+
 </ResourceDictionary>

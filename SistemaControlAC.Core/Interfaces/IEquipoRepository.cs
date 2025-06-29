@@ -18,8 +18,8 @@ namespace SistemaControlAC.Core.Interfaces
         Task<bool> DeleteAsync(int id);
         Task<bool> ExistsAsync(string numeroSerie, int? excludeId = null);
         Task<List<EquipoAireAcondicionado>> SearchAsync(string searchTerm);
-        Task<EquipoAireAcondicionado?> GetWithRelationsAsync(int id);
-        Task<List<EquipoAireAcondicionado>> GetWithRelationsAsync();
+        Task<EquipoAireAcondicionado?> GetWithClienteAsync(int id);
+        Task<List<EquipoAireAcondicionado>> GetWithClienteAsync();
         Task<int> CountAsync();
         Task<int> CountActiveAsync();
         Task<int> CountByClienteAsync(int clienteId);

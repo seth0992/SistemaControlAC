@@ -9,31 +9,22 @@ namespace SistemaControlAC.Core.Interfaces
 {
     public interface IEquipoService
     {
-
         Task<(bool Success, string Message, EquipoAireAcondicionado? Equipo)> CreateAsync(EquipoAireAcondicionado equipo);
-
         Task<(bool Success, string Message, EquipoAireAcondicionado? Equipo)> UpdateAsync(EquipoAireAcondicionado equipo);
-
         Task<(bool Success, string Message)> DeleteAsync(int id);
-
         Task<EquipoAireAcondicionado?> GetByIdAsync(int id);
         Task<List<EquipoAireAcondicionado>> GetAllAsync();
         Task<List<EquipoAireAcondicionado>> GetActiveAsync();
+        Task<List<EquipoAireAcondicionado>> GetByClienteAsync(int clienteId);
         Task<List<EquipoAireAcondicionado>> SearchAsync(string searchTerm);
         Task<EquipoAireAcondicionado?> GetWithClienteAsync(int id);
         Task<List<EquipoAireAcondicionado>> GetWithClienteAsync();
-        Task<List<EquipoAireAcondicionado>> GetWithRelationsAsync();
-        Task<EquipoAireAcondicionado?> GetWithRelationsAsync(int id);
         Task<bool> ValidateEquipoAsync(EquipoAireAcondicionado equipo, bool isUpdate = false);
         Task<string> GenerateEquipoCodeAsync();
         Task<int> CountAsync();
         Task<int> CountActiveAsync();
-        Task<int> CountByClienteIdAsync(int clienteId);
+        Task<int> CountByClienteAsync(int clienteId);
         Task<List<string>> GetTiposEquipoAsync();
-
-        Task <List<string>> GetMarcasPopularesAsync();
-
-
-
+        Task<List<string>> GetMarcasAsync();
     }
 }

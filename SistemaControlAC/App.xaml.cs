@@ -54,23 +54,33 @@ namespace SistemaControlAC
             // Repositorios
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<IEquipoRepository, EquipoRepository>();
 
             // Servicios de Dominio
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<ICredentialService, CredentialService>(); // Nuevo servicio
             services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IEquipoService, EquipoService>();
+
 
             // ViewModels
             services.AddTransient<LoginViewModel>(provider => new LoginViewModel(
                 provider.GetRequiredService<IAuthenticationService>(),
                 provider.GetRequiredService<ISessionService>(),
                 provider.GetRequiredService<ICredentialService>()));
+
             services.AddTransient<HomeViewModel>();
             services.AddTransient<ClienteViewModel>();
             services.AddTransient<ClienteFormViewModel>();
             services.AddTransient<ClienteDetailViewModel>();
 
+
+            services.AddTransient<EquipoViewModel>();
+            services.AddTransient<EquipoFormViewModel>();
+            services.AddTransient<EquipoDetailViewModel>();
+
+     
             // Ventanas y Views
             services.AddTransient<LoginWindow>(provider =>
             {
@@ -83,6 +93,9 @@ namespace SistemaControlAC
             services.AddTransient<ClienteView>();
             services.AddTransient<ClienteFormWindow>();
             services.AddTransient<ClienteDetailWindow>();
+            services.AddTransient<EquipoView>();
+            services.AddTransient<EquipoFormWindow>();
+            services.AddTransient<EquipoDetailWindow>();
 
             // Factory para ViewModels que requieren parámetros
             services.AddTransient<Func<ClienteViewModel>>(provider =>
@@ -101,6 +114,23 @@ namespace SistemaControlAC
                     provider.GetRequiredService<IClienteService>(),
                     provider.GetRequiredService<ISessionService>(),
                     cliente));
+
+            services.AddTransient<Func<EquipoViewModel>>(provider =>
+    () => new EquipoViewModel(
+        provider.GetRequiredService<IEquipoService>(),
+        provider.GetRequiredService<ISessionService>()));
+
+            services.AddTransient<Func<EquipoAireAcondicionado?, EquipoFormViewModel>>(provider =>
+                (equipo) => new EquipoFormViewModel(
+                    provider.GetRequiredService<IEquipoService>(),
+                    provider.GetRequiredService<ISessionService>(),
+                    equipo));
+
+            services.AddTransient<Func<EquipoAireAcondicionado, EquipoDetailViewModel>>(provider =>
+                (equipo) => new EquipoDetailViewModel(
+                    provider.GetRequiredService<IEquipoService>(),
+                    provider.GetRequiredService<ISessionService>(),
+                    equipo));
         }
 
         protected override void OnExit(ExitEventArgs e)

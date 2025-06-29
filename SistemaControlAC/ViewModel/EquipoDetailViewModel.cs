@@ -1,8 +1,8 @@
 ﻿using SistemaControlAC.Core.Entities;
 using SistemaControlAC.Core.Interfaces;
 using SistemaControlAC.Utilities;
+using SistemaControlAC.View;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,18 +13,14 @@ namespace SistemaControlAC.ViewModel
     public class EquipoDetailViewModel : ViewModelBase
     {
         private readonly IEquipoService _equipoService;
-        private readonly IClienteService _clienteService;
         private readonly ISessionService _sessionService;
         private EquipoAireAcondicionado _equipo;
-        private ObservableCollection<Cita> _citas;
 
-        public EquipoDetailViewModel(IEquipoService equipoService, IClienteService clienteService, ISessionService sessionService, EquipoAireAcondicionado equipo)
+        public EquipoDetailViewModel(IEquipoService equipoService, ISessionService sessionService, EquipoAireAcondicionado equipo)
         {
             _equipoService = equipoService;
-            _clienteService = clienteService;
             _sessionService = sessionService;
             _equipo = equipo;
-            _citas = new ObservableCollection<Cita>();
 
             Title = $"Detalles del Equipo - {equipo.Marca} {equipo.Modelo}";
 
@@ -34,8 +30,8 @@ namespace SistemaControlAC.ViewModel
             PrintCommand = new RelayCommand((param) => Print());
             RefreshCommand = new RelayCommand(async (param) => await RefreshAsync());
 
-            // Cargar datos relacionados
-            _ = LoadRelatedDataAsync();
+            // Cargar datos completos
+            _ = LoadEquipoDetailsAsync();
         }
 
         #region Propiedades
@@ -46,41 +42,15 @@ namespace SistemaControlAC.ViewModel
             set => SetProperty(ref _equipo, value);
         }
 
-        public ObservableCollection<Cita> Citas
-        {
-            get => _citas;
-            set => SetProperty(ref _citas, value);
-        }
-
         // Propiedades computadas para mostrar en la vista
-        public string EquipoInfo => $"{Equipo.Marca} {Equipo.Modelo}";
         public string ClienteNombre => $"{Equipo.Cliente?.Nombre} {Equipo.Cliente?.Apellido}";
+        public string EquipoCompleto => $"{Equipo.Marca} {Equipo.Modelo}";
         public string TipoFormateado => Equipo.Tipo;
-        public string CapacidadFormateada => string.IsNullOrWhiteSpace(Equipo.Capacidad) ? "No especificada" : Equipo.Capacidad;
-        public string NumeroSerieFormateado => string.IsNullOrWhiteSpace(Equipo.NumeroSerie) ? "No especificado" : Equipo.NumeroSerie;
         public string UbicacionFormateada => Equipo.Ubicacion;
-        public string EstadoFormateado => Equipo.Activo ? "Activo" : "Inactivo";
+        public string NumeroSerieFormateado => string.IsNullOrWhiteSpace(Equipo.NumeroSerie) ? "No especificado" : Equipo.NumeroSerie;
+        public string CapacidadFormateada => string.IsNullOrWhiteSpace(Equipo.Capacidad) ? "No especificada" : Equipo.Capacidad;
         public string FechaInstalacionFormateada => Equipo.FechaInstalacion?.ToString("dd/MM/yyyy") ?? "No especificada";
-        public int TotalCitas => Citas.Count;
-        public int CitasCompletadas => Citas.Count(c => c.Estado == "Completada");
-        public string EdadEquipo
-        {
-            get
-            {
-                if (Equipo.FechaInstalacion.HasValue)
-                {
-                    var edad = DateTime.Now - Equipo.FechaInstalacion.Value;
-                    var años = (int)(edad.TotalDays / 365.25);
-                    var meses = (int)((edad.TotalDays % 365.25) / 30.44);
-
-                    if (años > 0)
-                        return $"{años} año{(años != 1 ? "s" : "")} y {meses} mes{(meses != 1 ? "es" : "")}";
-                    else
-                        return $"{meses} mes{(meses != 1 ? "es" : "")}";
-                }
-                return "No especificada";
-            }
-        }
+        public string EstadoFormateado => Equipo.Activo ? "Activo" : "Inactivo";
 
         #endregion
 
@@ -95,52 +65,34 @@ namespace SistemaControlAC.ViewModel
 
         #region Métodos
 
-        private async Task LoadRelatedDataAsync()
+        private async Task LoadEquipoDetailsAsync()
         {
             try
             {
                 IsBusy = true;
 
-                // Cargar equipo con datos completos
-                var equipoCompleto = await _equipoService.GetWithRelationsAsync(Equipo.Id);
+                // Cargar equipo con cliente relacionado
+                var equipoCompleto = await _equipoService.GetWithClienteAsync(Equipo.Id);
 
                 if (equipoCompleto != null)
                 {
                     Equipo = equipoCompleto;
+                    Title = $"Detalles del Equipo - {Equipo.Marca} {Equipo.Modelo}";
 
                     // Notificar cambios en propiedades computadas
-                    OnPropertyChanged(nameof(EquipoInfo));
                     OnPropertyChanged(nameof(ClienteNombre));
+                    OnPropertyChanged(nameof(EquipoCompleto));
                     OnPropertyChanged(nameof(TipoFormateado));
-                    OnPropertyChanged(nameof(CapacidadFormateada));
-                    OnPropertyChanged(nameof(NumeroSerieFormateado));
                     OnPropertyChanged(nameof(UbicacionFormateada));
-                    OnPropertyChanged(nameof(EstadoFormateado));
+                    OnPropertyChanged(nameof(NumeroSerieFormateado));
+                    OnPropertyChanged(nameof(CapacidadFormateada));
                     OnPropertyChanged(nameof(FechaInstalacionFormateada));
-                    OnPropertyChanged(nameof(EdadEquipo));
+                    OnPropertyChanged(nameof(EstadoFormateado));
                 }
-
-                // Cargar citas relacionadas
-                // Aquí necesitarías un servicio de citas que permita buscar por equipo
-                // Por ahora, simulamos una lista vacía
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Citas.Clear();
-                    // TODO: Cargar citas reales del equipo cuando esté disponible el método
-                    // var citasEquipo = await _citaService.GetByEquipoAsync(Equipo.Id);
-                    // foreach (var cita in citasEquipo.OrderByDescending(c => c.FechaProgramada))
-                    // {
-                    //     Citas.Add(cita);
-                    // }
-                });
-
-                // Notificar cambios en estadísticas
-                OnPropertyChanged(nameof(TotalCitas));
-                OnPropertyChanged(nameof(CitasCompletadas));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los datos relacionados: {ex.Message}",
+                MessageBox.Show($"Error al cargar los detalles del equipo: {ex.Message}",
                               "Error",
                               MessageBoxButton.OK,
                               MessageBoxImage.Error);
@@ -155,8 +107,8 @@ namespace SistemaControlAC.ViewModel
         {
             try
             {
-                var formWindow = new View.EquipoFormWindow();
-                var formViewModel = new EquipoFormViewModel(_equipoService, _clienteService, _sessionService, Equipo);
+                var formWindow = new EquipoFormWindow();
+                var formViewModel = new EquipoFormViewModel(_equipoService, _sessionService, Equipo);
                 formWindow.DataContext = formViewModel;
                 formWindow.Owner = GetCurrentWindow();
 
@@ -196,27 +148,22 @@ namespace SistemaControlAC.ViewModel
         {
             try
             {
-                // Recargar datos del equipo
-                var equipoActualizado = await _equipoService.GetWithRelationsAsync(Equipo.Id);
+                var equipoActualizado = await _equipoService.GetWithClienteAsync(Equipo.Id);
                 if (equipoActualizado != null)
                 {
                     Equipo = equipoActualizado;
                     Title = $"Detalles del Equipo - {Equipo.Marca} {Equipo.Modelo}";
 
-                    // Notificar cambios en todas las propiedades computadas
-                    OnPropertyChanged(nameof(EquipoInfo));
+                    // Notificar cambios en propiedades computadas
                     OnPropertyChanged(nameof(ClienteNombre));
+                    OnPropertyChanged(nameof(EquipoCompleto));
                     OnPropertyChanged(nameof(TipoFormateado));
-                    OnPropertyChanged(nameof(CapacidadFormateada));
-                    OnPropertyChanged(nameof(NumeroSerieFormateado));
                     OnPropertyChanged(nameof(UbicacionFormateada));
-                    OnPropertyChanged(nameof(EstadoFormateado));
+                    OnPropertyChanged(nameof(NumeroSerieFormateado));
+                    OnPropertyChanged(nameof(CapacidadFormateada));
                     OnPropertyChanged(nameof(FechaInstalacionFormateada));
-                    OnPropertyChanged(nameof(EdadEquipo));
+                    OnPropertyChanged(nameof(EstadoFormateado));
                 }
-
-                // Recargar datos relacionados
-                await LoadRelatedDataAsync();
             }
             catch (Exception ex)
             {
