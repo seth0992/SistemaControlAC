@@ -1,9 +1,9 @@
 ﻿using SistemaControlAC.Core.Entities;
 using SistemaControlAC.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -12,19 +12,24 @@ namespace SistemaControlAC.Services
     public class EquipoService : IEquipoService
     {
         private readonly IEquipoRepository _equipoRepository;
+        private readonly ILogger<EquipoService> _logger;
 
-        public EquipoService(IEquipoRepository equipoRepository)
+        public EquipoService(IEquipoRepository equipoRepository, ILogger<EquipoService> logger = null)
         {
             _equipoRepository = equipoRepository;
+            _logger = logger;
         }
 
         public async Task<(bool Success, string Message, EquipoAireAcondicionado? Equipo)> CreateAsync(EquipoAireAcondicionado equipo)
         {
             try
             {
+                _logger?.LogInformation("Iniciando creación de equipo para cliente {ClienteId}", equipo.ClienteId);
+
                 // Validar equipo
                 if (!await ValidateEquipoAsync(equipo))
                 {
+                    _logger?.LogWarning("Validación de equipo falló para cliente {ClienteId}", equipo.ClienteId);
                     return (false, "Los datos del equipo no son válidos", null);
                 }
 
@@ -32,6 +37,7 @@ namespace SistemaControlAC.Services
                 if (!string.IsNullOrWhiteSpace(equipo.NumeroSerie) &&
                     await _equipoRepository.ExistsAsync(equipo.NumeroSerie))
                 {
+                    _logger?.LogWarning("Número de serie {NumeroSerie} ya existe", equipo.NumeroSerie);
                     return (false, "Ya existe un equipo registrado con ese número de serie", null);
                 }
 
@@ -43,15 +49,31 @@ namespace SistemaControlAC.Services
 
                 if (success)
                 {
+                    _logger?.LogInformation("Equipo creado exitosamente con ID {EquipoId}", equipo.Id);
                     return (true, "Equipo creado exitosamente", equipo);
                 }
                 else
                 {
+                    _logger?.LogError("CreateAsync retornó false sin excepción");
                     return (false, "Error al crear el equipo en la base de datos", null);
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                // Errores específicos de validación o base de datos
+                _logger?.LogError(ex, "Error de operación al crear equipo");
+
+                string message = ex.Message.Contains("no existe") ?
+                    "El cliente seleccionado no existe" :
+                    ex.Message.Contains("tabla") || ex.Message.Contains("Invalid object name") ?
+                        "Error de configuración de base de datos. Contacte al administrador." :
+                        ex.Message;
+
+                return (false, message, null);
+            }
             catch (Exception ex)
             {
+                _logger?.LogError(ex, "Error inesperado al crear equipo");
                 return (false, $"Error inesperado: {ex.Message}", null);
             }
         }
@@ -60,6 +82,8 @@ namespace SistemaControlAC.Services
         {
             try
             {
+                _logger?.LogInformation("Iniciando actualización de equipo {EquipoId}", equipo.Id);
+
                 // Validar equipo
                 if (!await ValidateEquipoAsync(equipo, true))
                 {
@@ -81,6 +105,7 @@ namespace SistemaControlAC.Services
 
                 if (success)
                 {
+                    _logger?.LogInformation("Equipo {EquipoId} actualizado exitosamente", equipo.Id);
                     return (true, "Equipo actualizado exitosamente", equipo);
                 }
                 else
@@ -88,8 +113,14 @@ namespace SistemaControlAC.Services
                     return (false, "Error al actualizar el equipo en la base de datos", null);
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                _logger?.LogError(ex, "Error de operación al actualizar equipo {EquipoId}", equipo.Id);
+                return (false, ex.Message, null);
+            }
             catch (Exception ex)
             {
+                _logger?.LogError(ex, "Error inesperado al actualizar equipo {EquipoId}", equipo.Id);
                 return (false, $"Error inesperado: {ex.Message}", null);
             }
         }
@@ -108,6 +139,7 @@ namespace SistemaControlAC.Services
 
                 if (success)
                 {
+                    _logger?.LogInformation("Equipo {EquipoId} eliminado exitosamente", id);
                     return (true, "Equipo eliminado exitosamente");
                 }
                 else
@@ -115,15 +147,30 @@ namespace SistemaControlAC.Services
                     return (false, "Error al eliminar el equipo");
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                _logger?.LogError(ex, "Error de operación al eliminar equipo {EquipoId}", id);
+                return (false, ex.Message);
+            }
             catch (Exception ex)
             {
+                _logger?.LogError(ex, "Error inesperado al eliminar equipo {EquipoId}", id);
                 return (false, $"Error inesperado: {ex.Message}");
             }
         }
 
+        // Métodos de consulta (sin cambios sustanciales, solo logging)
         public async Task<EquipoAireAcondicionado?> GetByIdAsync(int id)
         {
-            return await _equipoRepository.GetWithClienteAsync(id);
+            try
+            {
+                return await _equipoRepository.GetWithClienteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error al obtener equipo {EquipoId}", id);
+                throw;
+            }
         }
 
         public async Task<List<EquipoAireAcondicionado>> GetAllAsync()
@@ -156,49 +203,115 @@ namespace SistemaControlAC.Services
             return await _equipoRepository.GetWithClienteAsync();
         }
 
+        // Métodos de validación y utilidad
         public async Task<bool> ValidateEquipoAsync(EquipoAireAcondicionado equipo, bool isUpdate = false)
         {
             if (equipo == null)
+            {
+                _logger?.LogWarning("Equipo es null en validación");
                 return false;
+            }
 
             // Validar campos requeridos
             if (equipo.ClienteId <= 0)
+            {
+                _logger?.LogWarning("ClienteId inválido: {ClienteId}", equipo.ClienteId);
                 return false;
+            }
 
             if (string.IsNullOrWhiteSpace(equipo.Marca))
+            {
+                _logger?.LogWarning("Marca está vacía");
                 return false;
+            }
 
             if (string.IsNullOrWhiteSpace(equipo.Modelo))
+            {
+                _logger?.LogWarning("Modelo está vacío");
                 return false;
+            }
 
             if (string.IsNullOrWhiteSpace(equipo.Tipo))
+            {
+                _logger?.LogWarning("Tipo está vacío");
                 return false;
+            }
 
             if (string.IsNullOrWhiteSpace(equipo.Ubicacion))
+            {
+                _logger?.LogWarning("Ubicación está vacía");
                 return false;
+            }
 
             // Validar longitudes
             if (equipo.Marca.Length > 50 || equipo.Modelo.Length > 50)
+            {
+                _logger?.LogWarning("Marca o modelo exceden 50 caracteres");
                 return false;
+            }
 
             if (!string.IsNullOrWhiteSpace(equipo.NumeroSerie) && equipo.NumeroSerie.Length > 100)
+            {
+                _logger?.LogWarning("Número de serie excede 100 caracteres");
                 return false;
+            }
 
             if (equipo.Tipo.Length > 30)
+            {
+                _logger?.LogWarning("Tipo excede 30 caracteres");
                 return false;
+            }
 
             if (!string.IsNullOrWhiteSpace(equipo.Capacidad) && equipo.Capacidad.Length > 20)
+            {
+                _logger?.LogWarning("Capacidad excede 20 caracteres");
                 return false;
+            }
 
             if (equipo.Ubicacion.Length > 100)
+            {
+                _logger?.LogWarning("Ubicación excede 100 caracteres");
                 return false;
+            }
 
             // Validar tipos válidos
             var tiposValidos = await GetTiposEquipoAsync();
             if (!tiposValidos.Contains(equipo.Tipo))
+            {
+                _logger?.LogWarning("Tipo de equipo inválido: {Tipo}", equipo.Tipo);
                 return false;
+            }
 
             return true;
+        }
+
+        private void NormalizeEquipoData(EquipoAireAcondicionado equipo)
+        {
+            // Normalizar strings
+            equipo.Marca = equipo.Marca?.Trim();
+            equipo.Modelo = equipo.Modelo?.Trim();
+            equipo.NumeroSerie = string.IsNullOrWhiteSpace(equipo.NumeroSerie) ? null : equipo.NumeroSerie.Trim();
+            equipo.Tipo = equipo.Tipo?.Trim();
+            equipo.Capacidad = string.IsNullOrWhiteSpace(equipo.Capacidad) ? null : equipo.Capacidad.Trim();
+            equipo.Ubicacion = equipo.Ubicacion?.Trim();
+
+            // Capitalizar primera letra
+            if (!string.IsNullOrEmpty(equipo.Marca))
+                equipo.Marca = CapitalizeFirstLetter(equipo.Marca);
+
+            if (!string.IsNullOrEmpty(equipo.Modelo))
+                equipo.Modelo = CapitalizeFirstLetter(equipo.Modelo);
+
+            if (!string.IsNullOrEmpty(equipo.Ubicacion))
+                equipo.Ubicacion = CapitalizeFirstLetter(equipo.Ubicacion);
+        }
+
+        private string CapitalizeFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            return char.ToUpper(input[0]) + input.Substring(1).ToLower();
         }
 
         public async Task<string> GenerateEquipoCodeAsync()
@@ -244,67 +357,18 @@ namespace SistemaControlAC.Services
             {
                 "LG",
                 "Samsung",
-                "Carrier",
                 "Daikin",
-                "Mitsubishi",
-                "York",
+                "Carrier",
                 "Trane",
-                "Goodman",
+                "Mitsubishi",
+                "Panasonic",
+                "York",
                 "Rheem",
+                "Goodman",
                 "Lennox",
-                "Friedrich",
-                "Haier",
-                "Gree",
-                "Hisense",
-                "Otra"
-            }.OrderBy(x => x).ToList();
+                "Fujitsu",
+                "Otro"
+            };
         }
-
-        #region Métodos Privados
-
-        private void NormalizeEquipoData(EquipoAireAcondicionado equipo)
-        {
-            // Normalizar marca y modelo
-            equipo.Marca = NormalizeText(equipo.Marca);
-            equipo.Modelo = NormalizeText(equipo.Modelo);
-
-            // Normalizar número de serie
-            if (!string.IsNullOrWhiteSpace(equipo.NumeroSerie))
-            {
-                equipo.NumeroSerie = equipo.NumeroSerie.Trim().ToUpper();
-            }
-
-            // Normalizar tipo
-            equipo.Tipo = NormalizeText(equipo.Tipo);
-
-            // Normalizar ubicación
-            equipo.Ubicacion = NormalizeText(equipo.Ubicacion);
-
-            // Normalizar capacidad
-            if (!string.IsNullOrWhiteSpace(equipo.Capacidad))
-            {
-                equipo.Capacidad = equipo.Capacidad.Trim().ToUpper();
-            }
-        }
-
-        private string NormalizeText(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return string.Empty;
-
-            // Capitalizar primera letra de cada palabra
-            var words = text.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < words.Length; i++)
-            {
-                if (words[i].Length > 0)
-                {
-                    words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
-                }
-            }
-
-            return string.Join(" ", words);
-        }
-
-        #endregion
     }
 }

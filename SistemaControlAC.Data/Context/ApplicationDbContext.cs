@@ -69,12 +69,26 @@ namespace SistemaControlAC.Data.Context
                 entity.Property(e => e.Tipo).HasColumnName("TipoEquipo").IsRequired().HasMaxLength(30);
                 entity.Property(e => e.Capacidad).HasMaxLength(20);
                 entity.Property(e => e.Ubicacion).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.Activo).HasColumnName("EstadoEquipo").HasConversion<string>();
+                entity.Property(e => e.FechaInstalacion).HasColumnName("FechaInstalacion");
+
+                // CORREGIDO: Mapear Activo (bool) a EstadoEquipo (BIT) correctamente
+                entity.Property(e => e.Activo)
+                    .HasColumnName("EstadoEquipo")
+                    .HasDefaultValue(true);
 
                 // Relación con Cliente
                 entity.HasOne(e => e.Cliente)
                     .WithMany(c => c.Equipos)
-                    .HasForeignKey(e => e.ClienteId);
+                    .HasForeignKey(e => e.ClienteId)
+                    .OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
+
+                // Índices para optimización
+                entity.HasIndex(e => e.ClienteId)
+                    .HasDatabaseName("IX_Equipos_Cliente");
+                entity.HasIndex(e => e.NumeroSerie)
+                    .HasDatabaseName("IX_Equipos_NumeroSerie");
+                entity.HasIndex(e => e.Activo)
+                    .HasDatabaseName("IX_Equipos_Estado");
             });
 
             // Configuración de Cita
